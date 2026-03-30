@@ -97,9 +97,9 @@ const UNS = {
 
 const collections = [
   { id: "love", Icon: Heart, name: "Söýgi & Romantika", desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýuwaş reňkler, serêntäk gaplama.", items: "45+ görnüş", priceFrom: "85", tag: "Iň Meşhur", wide: true, img: UNS.love, gradient: "linear-gradient(135deg,#2d0015,#1a0010)" },
-  { id: "wedding", Icon: Gem, name: "Toý & Nikaý", desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.", items: "30+ paket", priceFrom: "250", tag: "Premium", wide: true, img: UNS.wedding, gradient: "linear-gradient(135deg,#0e0020,#1a0030)" },
+  { id: "wedding", Icon: Gem, name: "Toý & Durmuş Dabarasy", desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.", items: "30+ paket", priceFrom: "250", tag: "Aýratyn", wide: true, img: UNS.wedding, gradient: "linear-gradient(135deg,#0e0020,#1a0030)" },
   { id: "birthday", Icon: Sparkles, name: "Doglan Gün", desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we zowkuna görä özboluşly buketi.", items: "60+ görnüş", priceFrom: "55", tag: "Her Ýaş Üçin", wide: false, img: UNS.birthday, gradient: "linear-gradient(135deg,#1a0020,#280035)" },
-  { id: "corporate", Icon: Building2, name: "Korporatiw", desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.", items: "Aýratyn dizaýn", priceFrom: "200", tag: "B2B", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
+  { id: "corporate", Icon: Building2, name: "Işewürlik", desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.", items: "Aýratyn dizaýn", priceFrom: "200", tag: "Işewür", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
   { id: "sympathy", Icon: Bird, name: "Hormat & Sadaka", desc: "Kyn wagtlarda ýanyňyzda bolmak. Içgin we hormatly çemenler.", items: "20+ görnüş", priceFrom: "70", tag: "Inçe", wide: false, img: UNS.tulip, gradient: "linear-gradient(135deg,#080808,#121218)" },
   { id: "seasonal", Icon: Leaf, name: "Möwsümleýin Güller", desc: "Bahar, tomus, güýz we gyş. Her möwsümiň iň owadan gülleri.", items: "Möwsüme görä", priceFrom: "45", tag: "Täze", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#0a1205,#152010)" },
   { id: "boxes", Icon: Gift, name: "Sowgat Gutulary", desc: "Güller + şokolad + yşk şemi + şahsy hat. Doly duýgy bukjasy.", items: "25+ kombinasiýa", priceFrom: "120", tag: "Doly Set", wide: true, img: UNS.gift, gradient: "linear-gradient(135deg,#150e00,#221800)" },
@@ -109,23 +109,23 @@ const collections = [
 const products = [
   { id: 1, name: "Gyzyl Gül Neoklassik", category: "love", flowers: "51 gyzyl gül", size: "Uly", price: 185, oldPrice: 220, badge: "Iň Köp Satylýan", img: UNS.rose, gradient: "linear-gradient(135deg,#1a0010,#3d0020)" },
   { id: 2, name: "Ak Lale Arzuw", category: "wedding", flowers: "25 ak lale + pip", size: "Orta", price: 145, oldPrice: null, badge: "Toý Saýlawy", img: UNS.tulip, gradient: "linear-gradient(135deg,#0d0010,#200015)" },
-  { id: 3, name: "Pastel Buket Sürprizi", category: "birthday", flowers: "Garylyk pastel güller", size: "Orta", price: 95, oldPrice: 115, badge: "Doglan Gün Hit", img: UNS.birthday, gradient: "linear-gradient(135deg,#130010,#280025)" },
-  { id: 4, name: "Premium Sowgat Gutusy", category: "gift", flowers: "Güller + Ferrero + Şem", size: "Premium", price: 245, oldPrice: null, badge: "Premium", img: UNS.gift, gradient: "linear-gradient(135deg,#100d00,#201800)" },
-  { id: 5, name: "Lüks Gelin Buketi", category: "wedding", flowers: "Awen + Gül + Pip", size: "Toý", price: 380, oldPrice: null, badge: "Lýuks", img: UNS.wedding, gradient: "linear-gradient(135deg,#0a0808,#1a1015)" },
+  { id: 3, name: "Pastel Buket Sürprizi", category: "birthday", flowers: "Garylyk pastel güller", size: "Orta", price: 95, oldPrice: 115, badge: "Doglan Gün Saýlawy", img: UNS.birthday, gradient: "linear-gradient(135deg,#130010,#280025)" },
+  { id: 4, name: "Aýratyn Sowgat Gutusy", category: "gift", flowers: "Güller + Ferrero + Şem", size: "Aýratyn", price: 245, oldPrice: null, badge: "Aýratyn", img: UNS.gift, gradient: "linear-gradient(135deg,#100d00,#201800)" },
+  { id: 5, name: "Kaşan Gelin Buketi", category: "wedding", flowers: "Awen + Gül + Pip", size: "Toý", price: 380, oldPrice: null, badge: "Kaşan", img: UNS.wedding, gradient: "linear-gradient(135deg,#0a0808,#1a1015)" },
   { id: 6, name: "Gün Şöhlesi Buketi", category: "birthday", flowers: "Gün gülü + Sary güller", size: "Kiçi", price: 65, oldPrice: 80, badge: "Şadyýan", img: UNS.seasonal, gradient: "linear-gradient(135deg,#100a00,#201200)" },
-  { id: 7, name: "Korporatiw Stol Bezegi", category: "corporate", flowers: "Ak + Ýaşyl garylyk", size: "Ofis", price: 120, oldPrice: null, badge: "B2B", img: UNS.love, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
-  { id: 8, name: "Möwsüm Sürpriz Buketi", category: "seasonal", flowers: "Florist saýlawy", size: "Orta", price: 75, oldPrice: null, badge: "Täze", img: UNS.seasonal, gradient: "linear-gradient(135deg,#080010,#120018)" },
-  { id: 9, name: "100 Gül Premium Galpak", category: "love", flowers: "100 dürli reňkli gül", size: "Uly-Premium", price: 420, oldPrice: 500, badge: "Wau Effekt", img: UNS.heroMain, gradient: "linear-gradient(135deg,#140010,#2a0020)" },
+  { id: 7, name: "Işewür Stol Bezegi", category: "corporate", flowers: "Ak + Ýaşyl garylyk", size: "Ofis", price: 120, oldPrice: null, badge: "Işewür", img: UNS.love, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
+  { id: 8, name: "Möwsüm Sürpriz Buketi", category: "seasonal", flowers: "Gülçi saýlawy", size: "Orta", price: 75, oldPrice: null, badge: "Täze", img: UNS.seasonal, gradient: "linear-gradient(135deg,#080010,#120018)" },
+  { id: 9, name: "100 Gül Ajaýyp Galpak", category: "love", flowers: "100 dürli reňkli gül", size: "Ajaýyp", price: 420, oldPrice: 500, badge: "Haýran Ediji", img: UNS.heroMain, gradient: "linear-gradient(135deg,#140010,#2a0020)" },
   { id: 10, name: "Ýatlamaçy Çemen Gutusy", category: "sympathy", flowers: "Ak we mawy güller", size: "Orta", price: 115, oldPrice: null, badge: "Hormat", img: UNS.tulip, gradient: "linear-gradient(135deg,#050810,#0a1018)" },
-  { id: 11, name: "Söýgi Sandyk Sowgat", category: "gift", flowers: "Sandyk + Güller + Şokolad + Parfum", size: "Premium Set", price: 350, oldPrice: 420, badge: "Bestseller", img: UNS.gift, gradient: "linear-gradient(135deg,#120008,#220012)" },
+  { id: 11, name: "Söýgi Sandyk Sowgat", category: "gift", flowers: "Sandyk + Güller + Şokolad + Hoşboý", size: "Aýratyn Set", price: 350, oldPrice: 420, badge: "Iň Meşhur", img: UNS.gift, gradient: "linear-gradient(135deg,#120008,#220012)" },
   { id: 12, name: "Hepdelik Ofis Abunasy", category: "corporate", flowers: "Her hepde awtomatik", size: "Abuna", price: 280, oldPrice: null, badge: "Abuna", img: UNS.love, gradient: "linear-gradient(135deg,#080510,#120a1a)" },
 ];
 
 const florists = [
-  { name: "Maýagül Nurlyýewa", title: "Baş Florist & Dizaýner", exp: "9 Ýyl", specialty: "Toý & Lýuks Bukety", cert: "Ýewropa Sertifikatly", img: UNS.florist1, achievement: "500+ Toý Buketi", quote: "Her gül öz dilinde gürleýär. Men diňe terjimeçi." },
-  { name: "Güljeren Orazowa", title: "Korporatiw Florist", exp: "6 Ýyl", specialty: "Ofis & Çäre Bezegi", cert: "B2B Hünärmen", img: UNS.florist2, achievement: "200+ Korporatiw Müşderi", quote: "Içerki bezeg işiň dilidir." },
-  { name: "Leýli Annagylyjowa", title: "Söýgi Buketi Spesialisti", exp: "7 Ýyl", specialty: "Romantik Çemenler", cert: "Floristika Ussady", img: UNS.florist3, achievement: "1000+ Söýgi Buketi", quote: "Güller söz bilen düşündirip bolmajak zady aýdýar." },
-  { name: "Aýgözel Durdyýewa", title: "Kreatiw Dizaýner", exp: "4 Ýyl", specialty: "Eksperimental & Täze Görnüş", cert: "Halkara Bäsleşik Ýeňijisi", img: UNS.florist4, achievement: "3x Bäsleşik Baýragy", quote: "Floristika — bu janly sungat." },
+  { name: "Maýagül Nurlyýewa", title: "Baş Gülçi & Bezegçi", exp: "9 Ýyl", specialty: "Toý & Kaşan Bukety", cert: "Ýewropa Sertifikatly", img: UNS.florist1, achievement: "500+ Toý Buketi", quote: "Her gül öz dilinde gürleýär. Men diňe terjimeçi." },
+  { name: "Güljeren Orazowa", title: "Işewür Gülçi", exp: "6 Ýyl", specialty: "Ofis & Çäre Bezegi", cert: "Işewür Hünärmen", img: UNS.florist2, achievement: "200+ Işewür Müşderi", quote: "Içerki bezeg işiň dilidir." },
+  { name: "Leýli Annagylyjowa", title: "Söýgi Buketi Ussady", exp: "7 Ýyl", specialty: "Romantik Çemenler", cert: "Gülçilik Ussady", img: UNS.florist3, achievement: "1000+ Söýgi Buketi", quote: "Güller söz bilen düşündirip bolmajak zady aýdýar." },
+  { name: "Aýgözel Durdyýewa", title: "Döredijilik Bezegçisi", exp: "4 Ýyl", specialty: "Täzeçil & Döwrebap Görnüş", cert: "Halkara Bäsleşik Ýeňijisi", img: UNS.florist4, achievement: "3x Bäsleşik Baýragy", quote: "Gülçilik — bu janly sungat." },
 ];
 
 const testimonials = [
@@ -303,7 +303,7 @@ export default function FlowerShop() {
   const navLinks = [
     ["#collections","Koleksiýalar"],
     ["#products","Önümler"],
-    ["#florists","Floristler"],
+    ["#florists","Gülçiler"],
     ["#pricing","Bahalar"],
     ["#contact","Habarlaş"],
   ];
@@ -974,7 +974,7 @@ export default function FlowerShop() {
             </h1>
             <div className="hero-tagline">✦ {SHOP.tagline} ✦</div>
             <p className="hero-body">
-              {SHOP.city} şäheriniň iň owadan gülleri. {SHOP.orders} bagtly müşderi, {SHOP.delivery} minutda eltip bermek, profesional florist topary bilen arzuwlaryňyzy hakykata öwürýäris.
+              {SHOP.city} şäheriniň iň owadan gülleri. {SHOP.orders} bagtly müşderi, {SHOP.delivery} minutda eltip bermek, hünärmen gülçi topary bilen arzuwlaryňyzy hakykata öwürýäris.
             </p>
             <div className="hero-buttons">
               <a href="#contact" className="btn-accent hbtn"><ShoppingBag size={16} /> Sargyt Beriň</a>
@@ -1080,7 +1080,7 @@ export default function FlowerShop() {
             {[
               { Icon: Truck, title: `${SHOP.delivery} Minutda Eltip Bermek`, desc: "Şäher içinde tiz we ygtybarly eltip bermek." },
               { Icon: Scissors, title: "Şol Gün Kesilýän Güller", desc: "Her gün irden bakja we ýerli ekijiçilerden täze güller." },
-              { Icon: Ribbon, title: "Siz Üçin Özboluşly Dizaýn", desc: "Floristiňiz sizi diňleýär we arzuwlaryňyzy döredýär." },
+              { Icon: Ribbon, title: "Siz Üçin Özboluşly Dizaýn", desc: "Gülçiňiz sizi diňleýär we arzuwlaryňyzy döredýär." },
               { Icon: Camera, title: "Bermezden Öň Surata Düşürilýär", desc: "Buketi ibermezden öň suratyny WhatsApp/Telegram arkaly iberýäris." },
             ].map(({ Icon, title, desc }) => (
               <div className="feature-item" key={title}>
@@ -1099,11 +1099,11 @@ export default function FlowerShop() {
       <section id="products" className="section">
         <div className="section-header reveal">
           <div className="section-label">Önümler</div>
-          <h2 className="section-h2">Floristlerimizden Buketler</h2>
+          <h2 className="section-h2">Gülçilerimizden Buketler</h2>
           <p className="section-sub">Özboluşly el işi buketler, her biriniň öz hekaýasy bar.</p>
         </div>
         <div className="filter-tabs">
-          {[["all","Ählisi"],["love","Söýgi"],["wedding","Toý"],["birthday","D.Gün"],["gift","Sowgat"],["corporate","Korporatiw"],["seasonal","Möwsüm"]].map(([v,l]) => (
+          {[["all","Ählisi"],["love","Söýgi"],["wedding","Toý"],["birthday","Doglan Gün"],["gift","Sowgat"],["corporate","Işewürlik"],["seasonal","Möwsüm"]].map(([v,l]) => (
             <button key={v} className={`filter-tab${activeFilter === v ? " active" : ""}`} onClick={() => setActiveFilter(v)}>{l}</button>
           ))}
         </div>
@@ -1135,7 +1135,7 @@ export default function FlowerShop() {
       <section id="florists" className="section">
         <div className="section-header reveal">
           <div className="section-label">Toparymyz</div>
-          <h2 className="section-h2">Hünärmen Floristlerimiz</h2>
+          <h2 className="section-h2">Hünärmen Gülçilerimiz</h2>
           <p className="section-sub">Her biri öz sungatynyň ussady — gülleri dile getirýänler.</p>
         </div>
         <div className="florists-grid card-group">
@@ -1172,7 +1172,7 @@ export default function FlowerShop() {
           <div className="process-connector" />
           {[
             { num: "01", Icon: MessageCircle, title: "Habarlaşyň", desc: "Telefon, Telegram ýa-da WhatsApp arkaly biz bilen habarlaşyň." },
-            { num: "02", Icon: Scissors, title: "Dizaýny Saýlaň", desc: "Floristimiz sizi diňlär we iň laýyk buketi teklip eder." },
+            { num: "02", Icon: Scissors, title: "Dizaýny Saýlaň", desc: "Gülçimiz sizi diňlär we iň laýyk buketi teklip eder." },
             { num: "03", Icon: Camera, title: "Surata Düşüriň", desc: "Buketi bermezden öň suratyny size iberýäris — razylyk soraýarys." },
             { num: "04", Icon: Truck, title: "Eltip Bermek", desc: `${SHOP.delivery} minutda gapyňyza eltilýär ýa-da özüňiz alyp bilýärsiňiz.` },
           ].map(({ num, Icon, title, desc }) => (
@@ -1218,16 +1218,16 @@ export default function FlowerShop() {
       <section id="pricing" className="section">
         <div className="section-header reveal">
           <div className="section-label">Bahalar</div>
-          <h2 className="section-h2">Her Bujete Laýyk Çözgüt</h2>
-          <p className="section-sub">Aşakdaky bahalar takmynan. Floristimiz siziň bilen jikme-jik gürleşer.</p>
+          <h2 className="section-h2">Her Harçlamä Laýyk Çözgüt</h2>
+          <p className="section-sub">Aşakdaky bahalar takmynan. Gülçimiz siziň bilen jikme-jik gürleşer.</p>
         </div>
 
         <div className="price-tiers-grid card-group">
           {[
-            { label: "Başlangyç", price: "55", name: "Mini Buket", desc: "5–9 gül. Ýakymly gündelik sowgat." },
-            { label: "Orta", price: "95", name: "Klasik Buket", desc: "15–21 gül. Doglan gün we öý sowgady." },
-            { label: "Premium", price: "185", name: "Lýuks Buket", desc: "35–51 gül. Täsirli we owadan." },
-            { label: "Elite", price: "350+", name: "Aýratyn Sargyt", desc: "Islege görä. Çäk ýok." },
+            { label: "Başlangyç", price: "55", name: "Kiçi Buket", desc: "5–9 gül. Ýakymly gündelik sowgat." },
+            { label: "Orta", price: "95", name: "Adaty Buket", desc: "15–21 gül. Doglan gün we öý sowgady." },
+            { label: "Aýratyn", price: "185", name: "Kaşan Buket", desc: "35–51 gül. Täsirli we owadan." },
+            { label: "Saýlama", price: "350+", name: "Özboluşly Sargyt", desc: "Islege görä. Çäk ýok." },
           ].map(t => (
             <div className="price-tier card-anim" key={t.label}>
               <div className="pt-label">{t.label}</div>
@@ -1245,9 +1245,9 @@ export default function FlowerShop() {
 
         <div className="wedding-grid card-group">
           {[
-            { name: "Ýönekeý Toý", price: "250", note: "Kiçi toý üçin", popular: false, items: ["Gelin buketi (25 gül)","2 Butaforiýa buketi","Nika stoly bezegi","Erkin gowşurmak"] },
-            { name: "Premium Toý", price: "550", note: "Iň meşhur paket", popular: true, items: ["Gelin buketi (51 gül)","Gelin ata göwünjeň buketi","Stol merkezleri (5)","Zal giriş bezegi","Florist gatnaşýar"] },
-            { name: "Lýuks Toý", price: "1200+", note: "Doly hyzmat", popular: false, items: ["Çäksiz güller","Ähli otag bezegi","2 florist + koordinator","24/7 goldaw","Foto pozisiýa"] },
+            { name: "Ýeňil Toý", price: "250", note: "Kiçi toý üçin", popular: false, items: ["Gelin buketi (25 gül)","2 Bezeg buketi","Toý stoly bezegi","Erkin gowşurmak"] },
+            { name: "Aýratyn Toý", price: "550", note: "Iň meşhur paket", popular: true, items: ["Gelin buketi (51 gül)","Gelin ata göwünjeň buketi","Stol merkezleri (5)","Zal giriş bezegi","Gülçi gatnaşýar"] },
+            { name: "Kaşan Toý", price: "1200+", note: "Doly hyzmat", popular: false, items: ["Çäksiz güller","Ähli otag bezegi","2 gülçi + utgaşdyryjy","24/7 goldaw","Surat pozisiýasy"] },
           ].map(p => (
             <div key={p.name} className={`wp-card card-anim${p.popular ? " popular" : ""}`}>
               {p.popular && <div className="wp-popular-badge">Iň Meşhur</div>}
@@ -1311,7 +1311,7 @@ export default function FlowerShop() {
           <div className="reveal">
             <div className="section-label" style={{ justifyContent: "flex-start" }}>Habarlaşmak</div>
             <h2 className="contact-info-heading">Sargydyňyzy<br />Beriň</h2>
-            <p className="contact-info-body">6 sagadyň içinde floristimiz siz bilen habarlaşar we islege görä çözgüt tapar.</p>
+            <p className="contact-info-body">6 sagadyň içinde gülçimiz siz bilen habarlaşar we islege görä çözgüt tapar.</p>
             <div className="contact-item">
               <div className="contact-item-icon"><Phone size={16} /></div>
               <div><strong>{SHOP.phone}</strong></div>
@@ -1345,8 +1345,8 @@ export default function FlowerShop() {
                 <div className="success-title">Sargydyňyz Kabul Edildi!</div>
                 <div className="success-body">
                   Salam, <strong>{formData.name}</strong>! 🌸<br /><br />
-                  {SHOP.delivery} minutda floristimiz <strong>{formData.phone}</strong> belgiňize jaň eder.<br /><br />
-                  Sargytyňyz: <strong>{formData.occasion || "Florist bilen ylalaşmak"}</strong><br /><br />
+                  {SHOP.delivery} minutda gülçimiz <strong>{formData.phone}</strong> belgiňize jaň eder.<br /><br />
+                  Sargytyňyz: <strong>{formData.occasion || "Gülçi bilen ylalaşmak"}</strong><br /><br />
                   {SHOP.name} sizi begendirmäge howlukýar!
                 </div>
               </div>
@@ -1398,10 +1398,10 @@ export default function FlowerShop() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Bujetim: <span className="budget-val">{parseInt(formData.budget).toLocaleString()} TMT</span></label>
+                  <label className="form-label">Harçlamam: <span className="budget-val">{parseInt(formData.budget).toLocaleString()} TMT</span></label>
                   <input style={{ width: "100%", accentColor: accent }} type="range" min="50" max="2000" step="50" value={formData.budget} onChange={e => setFormData({ ...formData, budget: e.target.value })} />
                   <div className="budget-hint">
-                    Takmynan: {parseInt(formData.budget) < 100 ? "kiçi buket" : parseInt(formData.budget) < 200 ? "orta buket" : parseInt(formData.budget) < 400 ? "uly buket" : "premium buket"}
+                    Takmynan: {parseInt(formData.budget) < 100 ? "kiçi buket" : parseInt(formData.budget) < 200 ? "orta buket" : parseInt(formData.budget) < 400 ? "uly buket" : "aýratyn buket"}
                   </div>
                 </div>
                 <div className="form-group">
@@ -1429,7 +1429,7 @@ export default function FlowerShop() {
             <div>
               <div className="footer-col-h">Sahypalar</div>
               <ul className="footer-links">
-                {[["#","Baş Sahypa"],["#collections","Koleksiýalar"],["#florists","Floristler"],["#pricing","Bahalar"],["#contact","Habarlaş"]].map(([h,l]) => <li key={h}><a href={h}><ChevronRight size={12} />{l}</a></li>)}
+                {[["#","Baş Sahypa"],["#collections","Koleksiýalar"],["#florists","Gülçiler"],["#pricing","Bahalar"],["#contact","Habarlaş"]].map(([h,l]) => <li key={h}><a href={h}><ChevronRight size={12} />{l}</a></li>)}
               </ul>
             </div>
             <div>
