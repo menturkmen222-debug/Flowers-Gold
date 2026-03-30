@@ -96,9 +96,9 @@ const UNS = {
 };
 
 const collections = [
-  { id: "love", Icon: Heart, name: "Söýgi & Romantika", desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýuwaş reňkler, serêntäk gaplama.", items: "45+ görnüş", priceFrom: "85", tag: "Iň Meşhur", wide: true, img: UNS.love, gradient: "linear-gradient(135deg,#2d0015,#1a0010)" },
+  { id: "love", Icon: Heart, name: "Söýgi & Romantika", desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýumşak reňkler, näzik gaplama.", items: "45+ görnüş", priceFrom: "85", tag: "Iň Meşhur", wide: true, img: UNS.love, gradient: "linear-gradient(135deg,#2d0015,#1a0010)" },
   { id: "wedding", Icon: Gem, name: "Toý & Durmuş Dabarasy", desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.", items: "30+ paket", priceFrom: "250", tag: "Aýratyn", wide: true, img: UNS.wedding, gradient: "linear-gradient(135deg,#0e0020,#1a0030)" },
-  { id: "birthday", Icon: Sparkles, name: "Doglan Gün", desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we zowkuna görä özboluşly buketi.", items: "60+ görnüş", priceFrom: "55", tag: "Her Ýaş Üçin", wide: false, img: UNS.birthday, gradient: "linear-gradient(135deg,#1a0020,#280035)" },
+  { id: "birthday", Icon: Sparkles, name: "Doglan Gün", desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we islegine görä özboluşly buket.", items: "60+ görnüş", priceFrom: "55", tag: "Her Ýaş Üçin", wide: false, img: UNS.birthday, gradient: "linear-gradient(135deg,#1a0020,#280035)" },
   { id: "corporate", Icon: Building2, name: "Işewürlik", desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.", items: "Aýratyn dizaýn", priceFrom: "200", tag: "Işewür", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
   { id: "sympathy", Icon: Bird, name: "Hormat & Sadaka", desc: "Kyn wagtlarda ýanyňyzda bolmak. Içgin we hormatly çemenler.", items: "20+ görnüş", priceFrom: "70", tag: "Inçe", wide: false, img: UNS.tulip, gradient: "linear-gradient(135deg,#080808,#121218)" },
   { id: "seasonal", Icon: Leaf, name: "Möwsümleýin Güller", desc: "Bahar, tomus, güýz we gyş. Her möwsümiň iň owadan gülleri.", items: "Möwsüme görä", priceFrom: "45", tag: "Täze", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#0a1205,#152010)" },
@@ -129,12 +129,12 @@ const florists = [
 ];
 
 const testimonials = [
-  { name: "Aýna Çaryýewa", role: "Täze gelni", rating: 5, occasion: "Toý Buketi", result: "Ömrümüň iň owadan güni", text: "Toý buketime seredip ağlamaga başladym. Maýagül hanym meniň arzuwymdan hem owadan bir zat döretdi. Her fotosuratyma seredenimdä ony görýärin.", date: "2 hepde öň", avatar: UNS.wedding },
-  { name: "Serdar Rejepow", role: "Söýgüli", rating: 5, occasion: "Söýgi Sürprizi", result: "Ony geň galdyrdym!", text: "Aýalym wagtynda gapysyna gelende ynanamady. Güller şeýle täze we owadandy! 'Bu näme?' diýip ağlady. Bu dükany söýgüni mümkin edýär.", date: "1 aý öň", avatar: UNS.rose },
-  { name: "Läle Atamyradowa", role: "Ofis Dolandyryjysy", rating: 5, occasion: "Hepdelik Abuna", result: "Ofisimiz syrça boldy", text: "Her duşenbe irden täze güller gelýär. Işgärlerimiz we müşderilerimiz ofisimizde hemişe gülläp duran güllere haýranlar.", date: "Hemişelik müşderi", avatar: UNS.seasonal },
+  { name: "Aýna Çaryýewa", role: "Täze Gelin", rating: 5, occasion: "Toý Buketi", result: "Ömrümüň iň owadan güni", text: "Toý buketime seredip aglamaga başladym. Maýagül hanym meniň arzuwymdan hem owadan bir zat döretdi. Her suratyma seredenimdе ony görýärin.", date: "2 hepde öň", avatar: UNS.wedding },
+  { name: "Serdar Rejepow", role: "Söýgüli", rating: 5, occasion: "Söýgi Sürprizi", result: "Ony geň galdyrdym!", text: "Aýalym wagtynda gapysyna gelende ynanamady. Güller şeýle täze we owadandy! 'Bu näme?' diýip aglady. Bu dükan söýgüni hakykata öwürýär.", date: "1 aý öň", avatar: UNS.rose },
+  { name: "Läle Atamyradowa", role: "Ofis Dolandyryjysy", rating: 5, occasion: "Hepdelik Abuna", result: "Ofisimiz gülzara döndi", text: "Her duşenbe irden täze güller gelýär. Işgärlerimiz we müşderilerimiz ofisimizde hemişe açylyp duran güllere haýran galýarlar.", date: "Hemişelik müşderi", avatar: UNS.seasonal },
   { name: "Ogulgerek Işanowa", role: "Ejesi", rating: 5, occasion: "Doglan Gün Sowgady", result: "Çagam begençden aglady", text: "18 ýaşly gyzyma sürpriz etdim. 18 gülli dürli reňkli buketi görende göz ýaşlary döküp ugrady. Şeýle pursat döredendigi üçin sagboluň.", date: "3 hepde öň", avatar: UNS.birthday },
   { name: "Döwlet Hydyrow", role: "Biznes Eýesi", rating: 5, occasion: "Korporatiw Sargyt", result: "Iş partnýorlarym haýran galdy", text: "20 sany iş partnýorymyza sowgat gönderendik. Hemmesini wagtynda we birmeňzeş owadan gaplama bilen iberdi. Indi ähli korporatiw sowgatlarymyz üçin diňe olar.", date: "2 aý öň", avatar: UNS.gift },
-  { name: "Bahargül Nurmuhammedowa", role: "Toý Gurnagçysy", rating: 5, occasion: "Toý Zal Bezegi", result: "Müşderim gözden ýaş dökdi", text: "Toý gurnagçysy hökmünde köp florist bilen işledim. Bu ýeriň hili we wagtynda gelmek ygtybarylygy başgaça. Müşderilerime hemişe maslahat berýärin.", date: "Professional hyzmatdaş", avatar: UNS.love },
+  { name: "Bahargül Nurmuhammedowa", role: "Toý Gurnagçysy", rating: 5, occasion: "Toý Zal Bezegi", result: "Müşderim gözden ýaş dökdi", text: "Toý gurnagçysy hökmünde köp gülçi bilen işledim. Bu ýeriň hili we wagtynda gelmek ygtybarylygy başgaça. Müşderilerime hemişe maslahat berýärin.", date: "Hemişelik hyzmatdaş", avatar: UNS.love },
 ];
 
 const events = [
@@ -1067,9 +1067,9 @@ export default function FlowerShop() {
         <div className="why-grid">
           <div className="reveal">
             <div className="section-label" style={{ justifyContent: "flex-start" }}>Näme üçin biz?</div>
-            <h2 className="why-heading">Güller diňe<br />çiçek däl,<br /><em>duýgu</em></h2>
+            <h2 className="why-heading">Güller diňe<br />çemen däl,<br /><em>duýgudyr</em></h2>
             <p className="why-body">
-              {SHOP.founded}-njy ýyldan bäri {SHOP.city} şäherinde. Her güli öz elimiz bilen saýlaýarys, her buketi ýüregimiz bilen düzýäris. Müşderimiz bagtly bolmasa, biz işimizi etmediris.
+              {SHOP.founded}-njy ýyldan bäri {SHOP.city} şäherinde. Her güli öz elimiz bilen saýlaýarys, her buketi ýüregimiz bilen düzýäris. Müşderimiz bagtly bolmasa, biz maksadymyza ýetmedik bolarys.
             </p>
             <div className="gold-divider" />
             <div className="why-stats-inline">
@@ -1218,7 +1218,7 @@ export default function FlowerShop() {
       <section id="pricing" className="section">
         <div className="section-header reveal">
           <div className="section-label">Bahalar</div>
-          <h2 className="section-h2">Her Harçlamä Laýyk Çözgüt</h2>
+          <h2 className="section-h2">Her Harçlama Laýyk Çözgüt</h2>
           <p className="section-sub">Aşakdaky bahalar takmynan. Gülçimiz siziň bilen jikme-jik gürleşer.</p>
         </div>
 
@@ -1271,7 +1271,7 @@ export default function FlowerShop() {
         <div className="sub-grid card-group">
           {[
             { title: "Hepdelik Abuna", price: "180", detail: "Her duşenbe irden — ykjam buket", items: ["7 günde bir gün täze güller","Öý ýa-da ofis","Erkin düzmek","Islendik wagt ýatyrylmak"] },
-            { title: "Aýlyk Abuna", price: "320", detail: "Her aý iki gezek — lýuks buket", items: ["2 hepde bir gezek täze güller","Florist saýlawy ýa-da özüňiz saýlaýar","Degişli arzanlaşyk","Öýe gelip bermek"] },
+            { title: "Aýlyk Abuna", price: "320", detail: "Her aý iki gezek — kaşan buket", items: ["2 hepde bir gezek täze güller","Gülçi saýlawy ýa-da özüňiz saýlaýar","Aýratyn arzanlaşyk","Öýe gelip bermek"] },
           ].map(s => (
             <div key={s.title} className="sub-card card-anim">
               <div className="sub-title">{s.title}</div>
@@ -1435,7 +1435,7 @@ export default function FlowerShop() {
             <div>
               <div className="footer-col-h">Koleksiýalar</div>
               <ul className="footer-links">
-                {["Söýgi & Romantika","Toý & Nikaý","Doglan Gün","Korporatiw","Abuna Hyzmat"].map(l => <li key={l}><a href="#collections"><ChevronRight size={12} />{l}</a></li>)}
+                {["Söýgi & Romantika","Toý & Durmuş Dabarasy","Doglan Gün","Işewürlik","Abuna Hyzmat"].map(l => <li key={l}><a href="#collections"><ChevronRight size={12} />{l}</a></li>)}
               </ul>
             </div>
             <div>
