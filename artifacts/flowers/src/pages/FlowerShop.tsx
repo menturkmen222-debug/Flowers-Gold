@@ -26,48 +26,115 @@ function daysUntil(month: number, day: number): number {
   return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+// ── Petal SVG shapes ──────────────────────────────────
+const PETAL_SHAPES = [
+  "M10,0 C15,5 20,15 10,25 C0,15 5,5 10,0Z",
+  "M12,0 C20,4 22,14 12,22 C2,14 4,4 12,0Z",
+  "M0,10 C5,2 15,0 20,10 C15,20 5,18 0,10Z",
+  "M10,0 C18,3 22,12 15,20 C8,22 2,16 0,8 C3,2 6,-1 10,0Z",
+  "M8,0 C14,1 18,8 16,15 C14,22 6,22 3,16 C0,10 2,0 8,0Z",
+];
+
+function FloatingPetals({ accentRgb }: { accentRgb: string }) {
+  const petals = Array.from({ length: 22 }, (_, i) => ({
+    id: i,
+    shape: PETAL_SHAPES[i % PETAL_SHAPES.length],
+    x: Math.random() * 100,
+    size: 14 + Math.random() * 22,
+    dur: 12 + Math.random() * 18,
+    delay: Math.random() * 20,
+    drift: (Math.random() - 0.5) * 120,
+    opacity: 0.06 + Math.random() * 0.13,
+    rotate: Math.random() * 360,
+    rotateDur: 8 + Math.random() * 12,
+    color: i % 3 === 0 ? `rgba(${accentRgb}, 1)` : i % 3 === 1 ? "#C9A84C" : "#FF9BB5",
+  }));
+
+  return (
+    <div className="petals-canvas" aria-hidden="true">
+      {petals.map(p => (
+        <svg
+          key={p.id}
+          className="fp"
+          style={{
+            left: `${p.x}%`,
+            width: p.size,
+            height: p.size,
+            opacity: p.opacity,
+            animationDuration: `${p.dur}s`,
+            animationDelay: `-${p.delay}s`,
+            "--drift": `${p.drift}px`,
+            "--rot": `${p.rotate}deg`,
+            "--rot-dur": `${p.rotateDur}s`,
+          } as React.CSSProperties}
+          viewBox="0 0 22 26"
+          fill={p.color}
+        >
+          <path d={p.shape} />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 const BASE = import.meta.env.BASE_URL;
 
+// Unsplash free images
+const UNS = {
+  heroMain:   "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=700&q=85&auto=format&fit=crop",
+  love:       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=700&q=80&auto=format&fit=crop",
+  wedding:    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=700&q=80&auto=format&fit=crop",
+  birthday:   "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=700&q=80&auto=format&fit=crop",
+  gift:       "https://images.unsplash.com/photo-1547393429-741346b0e2f5?w=700&q=80&auto=format&fit=crop",
+  seasonal:   "https://images.unsplash.com/photo-1490750967868-88df5691cc17?w=700&q=80&auto=format&fit=crop",
+  rose:       "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=700&q=80&auto=format&fit=crop",
+  tulip:      "https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=700&q=80&auto=format&fit=crop",
+  florist1:   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&q=80&auto=format&fit=crop&crop=face",
+  florist2:   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80&auto=format&fit=crop&crop=face",
+  florist3:   "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&q=80&auto=format&fit=crop&crop=face",
+  florist4:   "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=80&auto=format&fit=crop&crop=face",
+};
+
 const collections = [
-  { id: "love", Icon: Heart, name: "Söýgi & Romantika", desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýuwaş reňkler, serêntäk gaplama.", items: "45+ görnüş", priceFrom: "85", tag: "Iň Meşhur", wide: true, img: "col-love.png", gradient: "linear-gradient(135deg,#2d0015,#1a0010)" },
-  { id: "wedding", Icon: Gem, name: "Toý & Nikaý", desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.", items: "30+ paket", priceFrom: "250", tag: "Premium", wide: true, img: "col-wedding.png", gradient: "linear-gradient(135deg,#0e0020,#1a0030)" },
-  { id: "birthday", Icon: Sparkles, name: "Doglan Gün", desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we zowkuna görä özboluşly buketi.", items: "60+ görnüş", priceFrom: "55", tag: "Her Ýaş Üçin", wide: false, img: "col-birthday.png", gradient: "linear-gradient(135deg,#1a0020,#280035)" },
-  { id: "corporate", Icon: Building2, name: "Korporatiw", desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.", items: "Aýratyn dizaýn", priceFrom: "200", tag: "B2B", wide: false, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
-  { id: "sympathy", Icon: Bird, name: "Hormat & Sadaka", desc: "Kyn wagtlarda ýanyňyzda bolmak. Içgin we hormatly çemenler.", items: "20+ görnüş", priceFrom: "70", tag: "Inçe", wide: false, gradient: "linear-gradient(135deg,#080808,#121218)" },
-  { id: "seasonal", Icon: Leaf, name: "Möwsümleýin Güller", desc: "Bahar, tomus, güýz we gyş. Her möwsümiň iň owadan gülleri.", items: "Möwsüme görä", priceFrom: "45", tag: "Täze", wide: false, img: "product-seasonal.png", gradient: "linear-gradient(135deg,#0a1205,#152010)" },
-  { id: "boxes", Icon: Gift, name: "Sowgat Gutulary", desc: "Güller + şokolad + yşk şemi + şahsy hat. Doly duýgy bukjasy.", items: "25+ kombinasiýa", priceFrom: "120", tag: "Doly Set", wide: true, img: "col-gift.png", gradient: "linear-gradient(135deg,#150e00,#221800)" },
-  { id: "subscription", Icon: Calendar, name: "Abuna Hyzmat", desc: "Her hepde ýa-da her aý öýüňize täze güller geler. Awtomatik bagtlylyk.", items: "Aýlyk / Hepdelik", priceFrom: "180", tag: "🔥 Täzelik", wide: true, gradient: "linear-gradient(135deg,#0d0020,#180030)" },
+  { id: "love", Icon: Heart, name: "Söýgi & Romantika", desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýuwaş reňkler, serêntäk gaplama.", items: "45+ görnüş", priceFrom: "85", tag: "Iň Meşhur", wide: true, img: UNS.love, gradient: "linear-gradient(135deg,#2d0015,#1a0010)" },
+  { id: "wedding", Icon: Gem, name: "Toý & Nikaý", desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.", items: "30+ paket", priceFrom: "250", tag: "Premium", wide: true, img: UNS.wedding, gradient: "linear-gradient(135deg,#0e0020,#1a0030)" },
+  { id: "birthday", Icon: Sparkles, name: "Doglan Gün", desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we zowkuna görä özboluşly buketi.", items: "60+ görnüş", priceFrom: "55", tag: "Her Ýaş Üçin", wide: false, img: UNS.birthday, gradient: "linear-gradient(135deg,#1a0020,#280035)" },
+  { id: "corporate", Icon: Building2, name: "Korporatiw", desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.", items: "Aýratyn dizaýn", priceFrom: "200", tag: "B2B", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
+  { id: "sympathy", Icon: Bird, name: "Hormat & Sadaka", desc: "Kyn wagtlarda ýanyňyzda bolmak. Içgin we hormatly çemenler.", items: "20+ görnüş", priceFrom: "70", tag: "Inçe", wide: false, img: UNS.tulip, gradient: "linear-gradient(135deg,#080808,#121218)" },
+  { id: "seasonal", Icon: Leaf, name: "Möwsümleýin Güller", desc: "Bahar, tomus, güýz we gyş. Her möwsümiň iň owadan gülleri.", items: "Möwsüme görä", priceFrom: "45", tag: "Täze", wide: false, img: UNS.seasonal, gradient: "linear-gradient(135deg,#0a1205,#152010)" },
+  { id: "boxes", Icon: Gift, name: "Sowgat Gutulary", desc: "Güller + şokolad + yşk şemi + şahsy hat. Doly duýgy bukjasy.", items: "25+ kombinasiýa", priceFrom: "120", tag: "Doly Set", wide: true, img: UNS.gift, gradient: "linear-gradient(135deg,#150e00,#221800)" },
+  { id: "subscription", Icon: Calendar, name: "Abuna Hyzmat", desc: "Her hepde ýa-da her aý öýüňize täze güller geler. Awtomatik bagtlylyk.", items: "Aýlyk / Hepdelik", priceFrom: "180", tag: "🔥 Täzelik", wide: true, img: UNS.rose, gradient: "linear-gradient(135deg,#0d0020,#180030)" },
 ];
 
 const products = [
-  { id: 1, name: "Gyzyl Gül Neoklassik", category: "love", flowers: "51 gyzyl gül", size: "Uly", price: 185, oldPrice: 220, badge: "Iň Köp Satylýan", img: "product-rose.png", gradient: "linear-gradient(135deg,#1a0010,#3d0020)" },
-  { id: 2, name: "Ak Lale Arzuw", category: "wedding", flowers: "25 ak lale + pip", size: "Orta", price: 145, oldPrice: null, badge: "Toý Saýlawy", img: "product-tulip.png", gradient: "linear-gradient(135deg,#0d0010,#200015)" },
-  { id: 3, name: "Pastel Buket Sürprizi", category: "birthday", flowers: "Garylyk pastel güller", size: "Orta", price: 95, oldPrice: 115, badge: "Doglan Gün Hit", img: "col-birthday.png", gradient: "linear-gradient(135deg,#130010,#280025)" },
-  { id: 4, name: "Premium Sowgat Gutusy", category: "gift", flowers: "Güller + Ferrero + Şem", size: "Premium", price: 245, oldPrice: null, badge: "Premium", img: "col-gift.png", gradient: "linear-gradient(135deg,#100d00,#201800)" },
-  { id: 5, name: "Lüks Gelin Buketi", category: "wedding", flowers: "Awen + Gül + Pip", size: "Toý", price: 380, oldPrice: null, badge: "Lýuks", img: "col-wedding.png", gradient: "linear-gradient(135deg,#0a0808,#1a1015)" },
-  { id: 6, name: "Gün Şöhlesi Buketi", category: "birthday", flowers: "Gün gülü + Sary güller", size: "Kiçi", price: 65, oldPrice: 80, badge: "Şadyýan", img: "product-seasonal.png", gradient: "linear-gradient(135deg,#100a00,#201200)" },
-  { id: 7, name: "Korporatiw Stol Bezegi", category: "corporate", flowers: "Ak + Ýaşyl garylyk", size: "Ofis", price: 120, oldPrice: null, badge: "B2B", img: null, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
-  { id: 8, name: "Möwsüm Sürpriz Buketi", category: "seasonal", flowers: "Florist saýlawy", size: "Orta", price: 75, oldPrice: null, badge: "Täze", img: "product-seasonal.png", gradient: "linear-gradient(135deg,#080010,#120018)" },
-  { id: 9, name: "100 Gül Premium Galpak", category: "love", flowers: "100 dürli reňkli gül", size: "Uly-Premium", price: 420, oldPrice: 500, badge: "Wau Effekt", img: "hero-bouquet.png", gradient: "linear-gradient(135deg,#140010,#2a0020)" },
-  { id: 10, name: "Ýatlamaçy Çemen Gutusy", category: "sympathy", flowers: "Ak we mawy güller", size: "Orta", price: 115, oldPrice: null, badge: "Hormat", img: "product-tulip.png", gradient: "linear-gradient(135deg,#050810,#0a1018)" },
-  { id: 11, name: "Söýgi Sandyk Sowgat", category: "gift", flowers: "Sandyk + Güller + Şokolad + Parfum", size: "Premium Set", price: 350, oldPrice: 420, badge: "Bestseller", img: "col-gift.png", gradient: "linear-gradient(135deg,#120008,#220012)" },
-  { id: 12, name: "Hepdelik Ofis Abunasy", category: "corporate", flowers: "Her hepde awtomatik", size: "Abuna", price: 280, oldPrice: null, badge: "Abuna", img: null, gradient: "linear-gradient(135deg,#080510,#120a1a)" },
+  { id: 1, name: "Gyzyl Gül Neoklassik", category: "love", flowers: "51 gyzyl gül", size: "Uly", price: 185, oldPrice: 220, badge: "Iň Köp Satylýan", img: UNS.rose, gradient: "linear-gradient(135deg,#1a0010,#3d0020)" },
+  { id: 2, name: "Ak Lale Arzuw", category: "wedding", flowers: "25 ak lale + pip", size: "Orta", price: 145, oldPrice: null, badge: "Toý Saýlawy", img: UNS.tulip, gradient: "linear-gradient(135deg,#0d0010,#200015)" },
+  { id: 3, name: "Pastel Buket Sürprizi", category: "birthday", flowers: "Garylyk pastel güller", size: "Orta", price: 95, oldPrice: 115, badge: "Doglan Gün Hit", img: UNS.birthday, gradient: "linear-gradient(135deg,#130010,#280025)" },
+  { id: 4, name: "Premium Sowgat Gutusy", category: "gift", flowers: "Güller + Ferrero + Şem", size: "Premium", price: 245, oldPrice: null, badge: "Premium", img: UNS.gift, gradient: "linear-gradient(135deg,#100d00,#201800)" },
+  { id: 5, name: "Lüks Gelin Buketi", category: "wedding", flowers: "Awen + Gül + Pip", size: "Toý", price: 380, oldPrice: null, badge: "Lýuks", img: UNS.wedding, gradient: "linear-gradient(135deg,#0a0808,#1a1015)" },
+  { id: 6, name: "Gün Şöhlesi Buketi", category: "birthday", flowers: "Gün gülü + Sary güller", size: "Kiçi", price: 65, oldPrice: 80, badge: "Şadyýan", img: UNS.seasonal, gradient: "linear-gradient(135deg,#100a00,#201200)" },
+  { id: 7, name: "Korporatiw Stol Bezegi", category: "corporate", flowers: "Ak + Ýaşyl garylyk", size: "Ofis", price: 120, oldPrice: null, badge: "B2B", img: UNS.love, gradient: "linear-gradient(135deg,#050a08,#0d1510)" },
+  { id: 8, name: "Möwsüm Sürpriz Buketi", category: "seasonal", flowers: "Florist saýlawy", size: "Orta", price: 75, oldPrice: null, badge: "Täze", img: UNS.seasonal, gradient: "linear-gradient(135deg,#080010,#120018)" },
+  { id: 9, name: "100 Gül Premium Galpak", category: "love", flowers: "100 dürli reňkli gül", size: "Uly-Premium", price: 420, oldPrice: 500, badge: "Wau Effekt", img: UNS.heroMain, gradient: "linear-gradient(135deg,#140010,#2a0020)" },
+  { id: 10, name: "Ýatlamaçy Çemen Gutusy", category: "sympathy", flowers: "Ak we mawy güller", size: "Orta", price: 115, oldPrice: null, badge: "Hormat", img: UNS.tulip, gradient: "linear-gradient(135deg,#050810,#0a1018)" },
+  { id: 11, name: "Söýgi Sandyk Sowgat", category: "gift", flowers: "Sandyk + Güller + Şokolad + Parfum", size: "Premium Set", price: 350, oldPrice: 420, badge: "Bestseller", img: UNS.gift, gradient: "linear-gradient(135deg,#120008,#220012)" },
+  { id: 12, name: "Hepdelik Ofis Abunasy", category: "corporate", flowers: "Her hepde awtomatik", size: "Abuna", price: 280, oldPrice: null, badge: "Abuna", img: UNS.love, gradient: "linear-gradient(135deg,#080510,#120a1a)" },
 ];
 
 const florists = [
-  { name: "Maýagül Nurlyýewa", title: "Baş Florist & Dizaýner", exp: "9 Ýyl", specialty: "Toý & Lýuks Bukety", cert: "Ýewropa Sertifikatly", img: "florist-1.png", achievement: "500+ Toý Buketi", quote: "Her gül öz dilinde gürleýär. Men diňe terjimeçi." },
-  { name: "Güljeren Orazowa", title: "Korporatiw Florist", exp: "6 Ýyl", specialty: "Ofis & Çäre Bezegi", cert: "B2B Hünärmen", img: "florist-2.png", achievement: "200+ Korporatiw Müşderi", quote: "Içerki bezeg işiň dilidir." },
-  { name: "Leýli Annagylyjowa", title: "Söýgi Buketi Spesialisti", exp: "7 Ýyl", specialty: "Romantik Çemenler", cert: "Floristika Ussady", img: "florist-1.png", achievement: "1000+ Söýgi Buketi", quote: "Güller söz bilen düşündirip bolmajak zady aýdýar." },
-  { name: "Aýgözel Durdyýewa", title: "Kreatiw Dizaýner", exp: "4 Ýyl", specialty: "Eksperimental & Täze Görnüş", cert: "Halkara Bäsleşik Ýeňijisi", img: "florist-2.png", achievement: "3x Bäsleşik Baýragy", quote: "Floristika — bu janly sungat." },
+  { name: "Maýagül Nurlyýewa", title: "Baş Florist & Dizaýner", exp: "9 Ýyl", specialty: "Toý & Lýuks Bukety", cert: "Ýewropa Sertifikatly", img: UNS.florist1, achievement: "500+ Toý Buketi", quote: "Her gül öz dilinde gürleýär. Men diňe terjimeçi." },
+  { name: "Güljeren Orazowa", title: "Korporatiw Florist", exp: "6 Ýyl", specialty: "Ofis & Çäre Bezegi", cert: "B2B Hünärmen", img: UNS.florist2, achievement: "200+ Korporatiw Müşderi", quote: "Içerki bezeg işiň dilidir." },
+  { name: "Leýli Annagylyjowa", title: "Söýgi Buketi Spesialisti", exp: "7 Ýyl", specialty: "Romantik Çemenler", cert: "Floristika Ussady", img: UNS.florist3, achievement: "1000+ Söýgi Buketi", quote: "Güller söz bilen düşündirip bolmajak zady aýdýar." },
+  { name: "Aýgözel Durdyýewa", title: "Kreatiw Dizaýner", exp: "4 Ýyl", specialty: "Eksperimental & Täze Görnüş", cert: "Halkara Bäsleşik Ýeňijisi", img: UNS.florist4, achievement: "3x Bäsleşik Baýragy", quote: "Floristika — bu janly sungat." },
 ];
 
 const testimonials = [
-  { name: "Aýna Çaryýewa", role: "Täze gelni", rating: 5, occasion: "Toý Buketi", result: "Ömrümüň iň owadan güni", text: "Toý buketime seredip ağlamaga başladym. Maýagül hanym meniň arzuwymdan hem owadan bir zat döretdi. Her fotosuratyma seredenimdä ony görýärin.", date: "2 hepde öň", avatar: "col-wedding.png" },
-  { name: "Serdar Rejepow", role: "Söýgüli", rating: 5, occasion: "Söýgi Sürprizi", result: "Ony geň galdyrdym!", text: "Aýalym wagtynda gapysyna gelende ynanamady. Güller şeýle täze we owadandy! 'Bu näme?' diýip ağlady. Bu dükany söýgüni mümkin edýär.", date: "1 aý öň", avatar: "product-rose.png" },
-  { name: "Läle Atamyradowa", role: "Ofis Dolandyryjysy", rating: 5, occasion: "Hepdelik Abuna", result: "Ofisimiz syrça boldy", text: "Her duşenbe irden täze güller gelýär. Işgärlerimiz we müşderilerimiz ofisimizde hemişe gülläp duran güllere haýranlar.", date: "Hemişelik müşderi", avatar: "product-seasonal.png" },
-  { name: "Ogulgerek Işanowa", role: "Ejesi", rating: 5, occasion: "Doglan Gün Sowgady", result: "Çagam begençden aglady", text: "18 ýaşly gyzyma sürpriz etdim. 18 gülli dürli reňkli buketi görende göz ýaşlary döküp ugrady. Şeýle pursat döredendigi üçin sagboluň.", date: "3 hepde öň", avatar: "col-birthday.png" },
-  { name: "Döwlet Hydyrow", role: "Biznes Eýesi", rating: 5, occasion: "Korporatiw Sargyt", result: "Iş partnýorlarym haýran galdy", text: "20 sany iş partnýorymyza sowgat gönderendik. Hemmesini wagtynda we birmeňzeş owadan gaplama bilen iberdi. Indi ähli korporatiw sowgatlarymyz üçin diňe olar.", date: "2 aý öň", avatar: "col-gift.png" },
-  { name: "Bahargül Nurmuhammedowa", role: "Toý Gurnagçysy", rating: 5, occasion: "Toý Zal Bezegi", result: "Müşderim gözden ýaş dökdi", text: "Toý gurnagçysy hökmünde köp florist bilen işledim. Bu ýeriň hili we wagtynda gelmek ygtybarylygy başgaça. Müşderilerime hemişe maslahat berýärin.", date: "Professional hyzmatdaş", avatar: "col-love.png" },
+  { name: "Aýna Çaryýewa", role: "Täze gelni", rating: 5, occasion: "Toý Buketi", result: "Ömrümüň iň owadan güni", text: "Toý buketime seredip ağlamaga başladym. Maýagül hanym meniň arzuwymdan hem owadan bir zat döretdi. Her fotosuratyma seredenimdä ony görýärin.", date: "2 hepde öň", avatar: UNS.wedding },
+  { name: "Serdar Rejepow", role: "Söýgüli", rating: 5, occasion: "Söýgi Sürprizi", result: "Ony geň galdyrdym!", text: "Aýalym wagtynda gapysyna gelende ynanamady. Güller şeýle täze we owadandy! 'Bu näme?' diýip ağlady. Bu dükany söýgüni mümkin edýär.", date: "1 aý öň", avatar: UNS.rose },
+  { name: "Läle Atamyradowa", role: "Ofis Dolandyryjysy", rating: 5, occasion: "Hepdelik Abuna", result: "Ofisimiz syrça boldy", text: "Her duşenbe irden täze güller gelýär. Işgärlerimiz we müşderilerimiz ofisimizde hemişe gülläp duran güllere haýranlar.", date: "Hemişelik müşderi", avatar: UNS.seasonal },
+  { name: "Ogulgerek Işanowa", role: "Ejesi", rating: 5, occasion: "Doglan Gün Sowgady", result: "Çagam begençden aglady", text: "18 ýaşly gyzyma sürpriz etdim. 18 gülli dürli reňkli buketi görende göz ýaşlary döküp ugrady. Şeýle pursat döredendigi üçin sagboluň.", date: "3 hepde öň", avatar: UNS.birthday },
+  { name: "Döwlet Hydyrow", role: "Biznes Eýesi", rating: 5, occasion: "Korporatiw Sargyt", result: "Iş partnýorlarym haýran galdy", text: "20 sany iş partnýorymyza sowgat gönderendik. Hemmesini wagtynda we birmeňzeş owadan gaplama bilen iberdi. Indi ähli korporatiw sowgatlarymyz üçin diňe olar.", date: "2 aý öň", avatar: UNS.gift },
+  { name: "Bahargül Nurmuhammedowa", role: "Toý Gurnagçysy", rating: 5, occasion: "Toý Zal Bezegi", result: "Müşderim gözden ýaş dökdi", text: "Toý gurnagçysy hökmünde köp florist bilen işledim. Bu ýeriň hili we wagtynda gelmek ygtybarylygy başgaça. Müşderilerime hemişe maslahat berýärin.", date: "Professional hyzmatdaş", avatar: UNS.love },
 ];
 
 const events = [
@@ -103,8 +170,6 @@ export default function FlowerShop() {
   const accent2 = `#${SHOP.color2}`;
   const accentRgb = hexToRgb(SHOP.color);
 
-  const img = (name: string) => `${BASE}img/${name}`;
-
   const [activeFilter, setActiveFilter] = useState("all");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
@@ -129,7 +194,6 @@ export default function FlowerShop() {
     const onScroll = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
 
-    // ── HERO entry animation with bundled GSAP (no CDN) ──
     gsap.set(".hero-badge", { x: -40, opacity: 0 });
     gsap.set(".hero-line-1, .hero-line-2, .hero-line-3", { y: 80, opacity: 0 });
     gsap.set(".hero-tagline", { opacity: 0 });
@@ -152,7 +216,6 @@ export default function FlowerShop() {
       .to(".floating-card",  { x: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: "back.out(1.7)" }, "-=0.3")
       .to(".trust-strip",    { opacity: 1, duration: 0.5 }, "-=0.2");
 
-    // ── Scroll reveals via IntersectionObserver (reliable, no CDN) ──
     const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
     revealEls.forEach(el => {
       el.style.opacity = "0";
@@ -201,7 +264,6 @@ export default function FlowerShop() {
 
     cardGroups.forEach(g => ioCards.observe(g));
 
-    // Safety fallback: ensure everything is visible after 4s regardless
     const fallback = setTimeout(() => {
       document.querySelectorAll<HTMLElement>(".reveal, .card-anim").forEach(el => {
         el.style.opacity = "1";
@@ -213,7 +275,6 @@ export default function FlowerShop() {
       });
     }, 4000);
 
-    // Stats counter
     const obs = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) setStatsVisible(true);
     }, { threshold: 0.3 });
@@ -229,11 +290,23 @@ export default function FlowerShop() {
     };
   }, []);
 
+  // Lock scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
+
   const filteredProducts = activeFilter === "all" ? products : products.filter(p => p.category === activeFilter);
-
   const handleFormSubmit = (e: React.FormEvent) => { e.preventDefault(); setFormSubmitted(true); };
-
   const toggleColor = (c: string) => setSelectedColors(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
+
+  const navLinks = [
+    ["#collections","Koleksiýalar"],
+    ["#products","Önümler"],
+    ["#florists","Floristler"],
+    ["#pricing","Bahalar"],
+    ["#contact","Habarlaş"],
+  ];
 
   return (
     <>
@@ -258,6 +331,29 @@ export default function FlowerShop() {
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
+        /* ── FLOATING PETALS ── */
+        .petals-canvas {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          overflow: hidden;
+        }
+        .fp {
+          position: absolute;
+          bottom: -40px;
+          animation: petalRise linear infinite;
+          filter: blur(0.4px);
+          will-change: transform, opacity;
+        }
+        @keyframes petalRise {
+          0%   { transform: translateY(0)    translateX(0px)         rotate(0deg)   scale(1);    opacity: var(--op, 0.09); }
+          20%  { transform: translateY(-20vh) translateX(calc(var(--drift,60px) * 0.3)) rotate(60deg)  scale(1.04); }
+          50%  { transform: translateY(-50vh) translateX(var(--drift,60px))            rotate(140deg) scale(0.95); }
+          80%  { transform: translateY(-80vh) translateX(calc(var(--drift,60px) * 0.6)) rotate(220deg) scale(1.02); opacity: var(--op, 0.09); }
+          100% { transform: translateY(-105vh) translateX(calc(var(--drift,60px) * 0.1)) rotate(var(--rot,360deg)) scale(0.8); opacity: 0; }
+        }
+
         @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg);} 33%{transform:translateY(-14px) rotate(2deg);} 66%{transform:translateY(-7px) rotate(-1deg);} }
         @keyframes slowRotate { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
         @keyframes accentPulse { 0%,100%{box-shadow:0 0 20px rgba(${accentRgb},.35),0 4px 20px rgba(0,0,0,.3);} 50%{box-shadow:0 0 45px rgba(${accentRgb},.7),0 4px 20px rgba(0,0,0,.3);} }
@@ -265,12 +361,23 @@ export default function FlowerShop() {
         @keyframes scaleIn { from{transform:scale(.92);opacity:0;} to{transform:scale(1);opacity:1;} }
         @keyframes slideUp { from{transform:translateY(30px);opacity:0;} to{transform:translateY(0);opacity:1;} }
         @keyframes drawStroke { to{stroke-dashoffset:0;} }
-        @keyframes petalSpin { 0%,100%{transform:translateY(0) rotate(0deg) scale(1);} 33%{transform:translateY(-18px) rotate(5deg) scale(1.03);} 66%{transform:translateY(-9px) rotate(-3deg) scale(.97);} }
         @keyframes shimmer { 0%{background-position:200% center;} 100%{background-position:-200% center;} }
+        @keyframes menuItemIn {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes menuBgIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes patternMove {
+          0%   { background-position: 0 0; }
+          100% { background-position: 60px 60px; }
+        }
 
         /* ── NAV ── */
-        .nav { position:fixed; top:0; left:0; right:0; z-index:1000; padding:1.1rem 2.5rem; display:flex; align-items:center; justify-content:space-between; transition:all .4s cubic-bezier(.4,0,.2,1); }
-        .nav.scrolled { background:rgba(6,4,10,.88); backdrop-filter:blur(28px) saturate(200%); border-bottom:1px solid rgba(${accentRgb},.18); box-shadow:0 4px 48px rgba(0,0,0,.5); }
+        .nav { position:fixed; top:0; left:0; right:0; z-index:1000; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; transition:all .4s cubic-bezier(.4,0,.2,1); }
+        .nav.scrolled { background:rgba(6,4,10,.92); backdrop-filter:blur(28px) saturate(200%); border-bottom:1px solid rgba(${accentRgb},.18); box-shadow:0 4px 48px rgba(0,0,0,.5); }
         .nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.55rem; font-weight:600; color:var(--text); text-decoration:none; display:flex; align-items:center; gap:.55rem; letter-spacing:.01em; }
         .nav-logo svg { color:var(--accent); }
         .nav-links { display:flex; gap:2rem; list-style:none; }
@@ -284,56 +391,223 @@ export default function FlowerShop() {
         .btn-accent:hover { transform:translateY(-2px); animation:accentPulse 2s infinite; }
         .btn-ghost { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.18); padding:.72rem 1.6rem; border-radius:30px; font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:500; cursor:pointer; transition:all .3s; text-decoration:none; display:inline-flex; align-items:center; gap:.45rem; }
         .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
-        .hamburger { display:none; background:none; border:none; color:var(--text); cursor:pointer; padding:.5rem; }
-        .mobile-menu { display:none; position:fixed; inset:0; z-index:999; background:rgba(6,4,10,.97); backdrop-filter:blur(24px); flex-direction:column; align-items:center; justify-content:center; gap:2.2rem; }
-        .mobile-menu.open { display:flex; }
-        .mobile-menu a { font-family:'Playfair Display',serif; font-size:2.2rem; color:var(--text); text-decoration:none; transition:color .2s; }
-        .mobile-menu a:hover { color:var(--accent); }
-        .mobile-close { position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; color:var(--text); cursor:pointer; }
+        .hamburger { display:none; background:rgba(${accentRgb},.08); border:1px solid rgba(${accentRgb},.2); border-radius:12px; color:var(--text); cursor:pointer; padding:.55rem; transition:all .2s; width:44px; height:44px; align-items:center; justify-content:center; }
+        .hamburger:hover { background:rgba(${accentRgb},.16); border-color:rgba(${accentRgb},.4); }
+
+        /* ── MOBILE MENU (beautiful with patterns) ── */
+        .mobile-menu {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 1100;
+          background: rgba(4, 2, 8, 0.97);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0;
+          opacity: 0;
+          transition: opacity .35s ease;
+          overflow: hidden;
+        }
+        .mobile-menu.open { display: flex; animation: menuBgIn .3s ease forwards; }
+
+        /* Geometric floral pattern overlay */
+        .mobile-menu::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image:
+            radial-gradient(circle at 50% 50%, rgba(${accentRgb}, .04) 0%, transparent 70%),
+            repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(${accentRgb},.04) 30px),
+            repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(${accentRgb},.04) 30px);
+          animation: patternMove 8s linear infinite;
+          pointer-events: none;
+        }
+        .mobile-menu::after {
+          content: '';
+          position: absolute;
+          width: 500px; height: 500px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(${accentRgb},.06) 0%, transparent 70%);
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+        }
+
+        /* Decorative corner petals */
+        .mm-corner {
+          position: absolute;
+          pointer-events: none;
+          opacity: .12;
+        }
+        .mm-corner-tl { top: -30px; left: -30px; width: 200px; height: 200px; }
+        .mm-corner-br { bottom: -30px; right: -30px; width: 180px; height: 180px; transform: rotate(180deg); }
+
+        .mm-top-line {
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+        }
+        .mm-bottom-line {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(${accentRgb},.3), transparent);
+        }
+
+        .mm-logo {
+          position: absolute;
+          top: 1.6rem; left: 1.6rem;
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.4rem;
+          color: var(--text);
+          display: flex; align-items: center; gap: .5rem;
+          z-index: 2;
+          opacity: .8;
+        }
+        .mm-logo svg { color: var(--accent); }
+
+        .mobile-close {
+          position: absolute;
+          top: 1.2rem; right: 1.2rem;
+          background: rgba(${accentRgb},.08);
+          border: 1px solid rgba(${accentRgb},.2);
+          border-radius: 50%;
+          color: var(--text);
+          cursor: pointer;
+          width: 44px; height: 44px;
+          display: flex; align-items: center; justify-content: center;
+          transition: all .2s;
+          z-index: 2;
+        }
+        .mobile-close:hover { background: rgba(${accentRgb},.18); transform: rotate(90deg); }
+
+        .mm-nav-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: .2rem;
+          position: relative;
+          z-index: 2;
+          padding: 2rem 0;
+        }
+
+        .mm-nav-item { overflow: hidden; }
+        .mm-nav-item a {
+          display: flex;
+          align-items: center;
+          gap: .6rem;
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(1.7rem, 7vw, 2.5rem);
+          color: rgba(248,244,252,.75);
+          text-decoration: none;
+          transition: color .25s, transform .25s;
+          padding: .55rem 2rem;
+          letter-spacing: .01em;
+          position: relative;
+        }
+        .mm-nav-item a::before {
+          content: '✦';
+          font-size: .7em;
+          color: var(--accent);
+          opacity: 0;
+          transform: translateX(-8px);
+          transition: all .25s;
+          font-family: sans-serif;
+        }
+        .mm-nav-item a:hover { color: var(--text); transform: translateX(6px); }
+        .mm-nav-item a:hover::before { opacity: 1; transform: translateX(0); }
+
+        .mm-divider {
+          width: 60px; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(${accentRgb},.4), transparent);
+          margin: .5rem 0;
+          position: relative;
+          z-index: 2;
+        }
+
+        .mm-social {
+          display: flex;
+          gap: 1rem;
+          position: relative;
+          z-index: 2;
+          margin-top: .5rem;
+        }
+        .mm-social a {
+          display: flex; align-items: center; gap: .4rem;
+          color: var(--text-muted);
+          text-decoration: none;
+          font-size: .82rem;
+          background: rgba(${accentRgb},.06);
+          border: 1px solid rgba(${accentRgb},.18);
+          padding: .5rem 1rem;
+          border-radius: 20px;
+          transition: all .25s;
+        }
+        .mm-social a:hover { color: var(--accent); border-color: rgba(${accentRgb},.5); }
+
+        .mm-cta {
+          position: relative;
+          z-index: 2;
+          margin-top: 1.2rem;
+        }
+
+        /* Animate menu items in */
+        .mobile-menu.open .mm-nav-item {
+          animation: menuItemIn .4s cubic-bezier(.22,1,.36,1) both;
+        }
+        .mobile-menu.open .mm-nav-item:nth-child(1) { animation-delay: .08s; }
+        .mobile-menu.open .mm-nav-item:nth-child(2) { animation-delay: .14s; }
+        .mobile-menu.open .mm-nav-item:nth-child(3) { animation-delay: .20s; }
+        .mobile-menu.open .mm-nav-item:nth-child(4) { animation-delay: .26s; }
+        .mobile-menu.open .mm-nav-item:nth-child(5) { animation-delay: .32s; }
+        .mobile-menu.open .mm-divider,
+        .mobile-menu.open .mm-social,
+        .mobile-menu.open .mm-cta { animation: menuItemIn .4s cubic-bezier(.22,1,.36,1) .38s both; }
 
         /* ── HERO ── */
-        .hero { min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:8rem 2.5rem 5rem; }
+        .hero { min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:8rem 2rem 5rem; }
         .hero-orb { position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; }
         .hero-orb-1 { width:700px; height:700px; background:var(--accent); opacity:.07; top:50%; left:50%; transform:translate(-50%,-50%); animation:slowRotate 35s linear infinite; }
         .hero-orb-2 { width:350px; height:350px; background:var(--accent2); opacity:.05; top:15%; right:8%; animation:slowRotate 25s linear infinite reverse; }
         .hero-orb-3 { width:250px; height:250px; background:var(--accent); opacity:.04; bottom:10%; left:5%; animation:slowRotate 20s linear infinite; }
         .dot-grid { position:absolute; inset:0; background-image:radial-gradient(circle, rgba(${accentRgb},.07) 1px, transparent 1px); background-size:26px 26px; pointer-events:none; }
-        .petal-float { position:absolute; border-radius:60% 40% 70% 30% / 50% 60% 40% 50%; pointer-events:none; animation:petalSpin var(--dur,6s) ease-in-out infinite; }
         .hero-content { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; max-width:1400px; margin:0 auto; width:100%; }
         .hero-badge { display:inline-flex; align-items:center; gap:.5rem; background:rgba(${accentRgb},.1); border:1px solid rgba(${accentRgb},.3); border-radius:30px; padding:.42rem 1.1rem; font-size:.82rem; color:var(--accent); margin-bottom:1.6rem; font-family:'Space Grotesk',sans-serif; width:fit-content; }
         .hero-heading { font-family:'Playfair Display',serif; font-style:italic; line-height:1.05; margin-bottom:1.1rem; overflow:hidden; }
-        .hero-line-1,.hero-line-2,.hero-line-3 { display:block; font-size:clamp(3.2rem,8vw,6.5rem); font-weight:700; }
+        .hero-line-1,.hero-line-2,.hero-line-3 { display:block; font-size:clamp(2.8rem,7vw,6.5rem); font-weight:700; }
         .hero-line-1,.hero-line-3 { color:var(--text); }
         .hero-line-2 { background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .hero-tagline { font-family:'Cormorant Garamond',serif; font-size:1.15rem; color:var(--gold); letter-spacing:.06em; margin-bottom:1.1rem; font-style:italic; }
         .hero-body { color:var(--text-muted); line-height:1.8; margin-bottom:2.2rem; max-width:500px; font-size:.97rem; }
         .hero-buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2.5rem; }
-        .trust-strip { display:flex; gap:2rem; flex-wrap:wrap; }
+        .trust-strip { display:flex; gap:1.5rem; flex-wrap:wrap; }
         .trust-item { display:flex; align-items:center; gap:.45rem; font-size:.83rem; color:var(--text-muted); }
         .trust-item svg { color:var(--accent); flex-shrink:0; }
-        .hero-right { position:relative; display:flex; justify-content:center; align-items:center; min-height:460px; }
-        .hero-img-wrap { width:320px; height:320px; border-radius:50%; overflow:hidden; border:1px solid rgba(${accentRgb},.2); box-shadow:0 0 80px rgba(${accentRgb},.15); position:relative; }
+        .hero-right { position:relative; display:flex; justify-content:center; align-items:center; min-height:400px; }
+        .hero-img-wrap { width:300px; height:300px; border-radius:50%; overflow:hidden; border:1px solid rgba(${accentRgb},.2); box-shadow:0 0 80px rgba(${accentRgb},.15); position:relative; }
         .hero-img-wrap img { width:100%; height:100%; object-fit:cover; }
         .hero-img-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,rgba(${accentRgb},.12),rgba(${accentRgb},.04)); }
-        .floating-card { position:absolute; background:rgba(16,12,24,.92); border:1px solid rgba(${accentRgb},.2); border-radius:16px; padding:1rem 1.3rem; backdrop-filter:blur(20px); animation:float var(--dur,4s) ease-in-out infinite; min-width:160px; }
+        .floating-card { position:absolute; background:rgba(16,12,24,.92); border:1px solid rgba(${accentRgb},.2); border-radius:16px; padding:.85rem 1.1rem; backdrop-filter:blur(20px); animation:float var(--dur,4s) ease-in-out infinite; min-width:140px; }
         .floating-card:nth-child(2) { top:4%; right:0; --dur:3.2s; }
         .floating-card:nth-child(3) { top:42%; left:-5%; --dur:4.1s; }
         .floating-card:nth-child(4) { bottom:4%; right:10%; --dur:5s; }
         .fc-icon { color:var(--accent); margin-bottom:.4rem; }
-        .fc-title { font-size:.85rem; color:var(--text); font-weight:600; margin-bottom:.2rem; }
-        .fc-sub { font-size:.76rem; color:var(--text-muted); }
+        .fc-title { font-size:.82rem; color:var(--text); font-weight:600; margin-bottom:.2rem; }
+        .fc-sub { font-size:.74rem; color:var(--text-muted); }
         .fc-stars { display:flex; gap:2px; color:var(--gold); margin-bottom:.3rem; }
 
         /* ── STATS ── */
-        .stats-section { background:linear-gradient(135deg,rgba(${accentRgb},.06),transparent 60%); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:3.5rem 2rem; }
+        .stats-section { background:linear-gradient(135deg,rgba(${accentRgb},.06),transparent 60%); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:3.5rem 2rem; position:relative; z-index:1; }
         .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; max-width:1000px; margin:0 auto; text-align:center; }
-        .stat-item { }
         .stat-number { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:700; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; animation:${statsVisible ? "scaleIn .6s ease forwards" : "none"}; }
         .stat-label { font-size:.82rem; color:var(--text-muted); margin-top:.5rem; letter-spacing:.02em; }
         .stat-icon { color:var(--accent); margin-bottom:.5rem; opacity:.7; }
 
         /* ── SECTION WRAPPER ── */
-        .section { padding:clamp(4rem,8vw,7rem) clamp(1rem,4vw,3rem); max-width:1440px; margin:0 auto; }
+        .section { padding:clamp(3.5rem,8vw,7rem) clamp(1rem,4vw,2.5rem); max-width:1440px; margin:0 auto; position:relative; z-index:1; }
         .section-header { text-align:center; margin-bottom:3.5rem; }
         .section-label { font-family:'Space Grotesk',sans-serif; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:.6rem; display:flex; align-items:center; justify-content:center; gap:.5rem; }
         .section-label::before,.section-label::after { content:''; flex:1; max-width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--accent)); }
@@ -353,7 +627,6 @@ export default function FlowerShop() {
         .col-img-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
         .col-tag { position:absolute; top:.8rem; left:.8rem; background:rgba(${accentRgb},.85); color:#fff; font-size:.68rem; padding:.25rem .65rem; border-radius:20px; font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:.05em; z-index:2; }
         .col-body { padding:1.3rem 1.4rem 1.4rem; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
-        .col-top { }
         .col-icon-wrap { width:38px; height:38px; background:rgba(${accentRgb},.1); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--accent); margin-bottom:.75rem; }
         .col-name { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:.4rem; }
         .col-desc { color:var(--text-muted); font-size:.83rem; line-height:1.5; margin-bottom:.8rem; }
@@ -362,9 +635,9 @@ export default function FlowerShop() {
         .col-arrow { color:var(--accent); opacity:0; transform:translateX(-6px); transition:all .3s ease; }
 
         /* ── WHY US ── */
-        .why-section { padding:clamp(4rem,8vw,7rem) clamp(1rem,4vw,3rem); }
+        .why-section { padding:clamp(3.5rem,8vw,7rem) clamp(1rem,4vw,2.5rem); position:relative; z-index:1; }
         .why-grid { display:grid; grid-template-columns:3fr 2fr; gap:5rem; align-items:center; max-width:1200px; margin:0 auto; }
-        .why-heading { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,6vw,5rem); font-style:italic; line-height:1.1; color:var(--text); margin-bottom:1.5rem; }
+        .why-heading { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,5vw,5rem); font-style:italic; line-height:1.1; color:var(--text); margin-bottom:1.5rem; }
         .why-body { color:var(--text-muted); line-height:1.85; margin-bottom:1.5rem; font-size:.97rem; }
         .gold-divider { height:1px; background:linear-gradient(90deg,var(--gold) 0%,rgba(201,168,76,.3) 60%,transparent 100%); margin:1.5rem 0; }
         .why-stats-inline { color:var(--text-muted); font-size:.92rem; }
@@ -420,7 +693,7 @@ export default function FlowerShop() {
         .florist-cta { display:flex; align-items:center; justify-content:center; gap:.4rem; width:100%; margin-top:1rem; padding:.6rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; opacity:0; transform:translateY(8px); transition:all .3s; }
 
         /* ── ORDER PROCESS ── */
-        .process-section { padding:clamp(4rem,8vw,7rem) clamp(1rem,4vw,3rem); background:linear-gradient(180deg,transparent,rgba(${accentRgb},.04),transparent); }
+        .process-section { padding:clamp(3.5rem,8vw,7rem) clamp(1rem,4vw,2.5rem); background:linear-gradient(180deg,transparent,rgba(${accentRgb},.04),transparent); position:relative; z-index:1; }
         .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; max-width:1050px; margin:0 auto; position:relative; }
         .process-connector { position:absolute; top:2rem; left:calc(12.5% + 1rem); right:calc(12.5% + 1rem); height:1px; background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent); }
         .process-step { text-align:center; padding:1rem .5rem; position:relative; }
@@ -494,7 +767,7 @@ export default function FlowerShop() {
         .social-row { display:flex; gap:.7rem; margin-top:1.4rem; flex-wrap:wrap; }
         .social-btn { display:inline-flex; align-items:center; gap:.45rem; color:var(--text-muted); text-decoration:none; font-size:.82rem; background:var(--surface); border:1px solid var(--border); padding:.42rem .9rem; border-radius:20px; transition:all .25s; }
         .social-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(${accentRgb},.06); }
-        .form-card { background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:2.5rem; }
+        .form-card { background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:2rem; }
         .form-group { margin-bottom:1.2rem; }
         .form-label { display:block; font-size:.82rem; color:var(--text-muted); margin-bottom:.42rem; font-weight:500; }
         .form-label .req { color:var(--accent); }
@@ -522,7 +795,7 @@ export default function FlowerShop() {
         .success-body { color:var(--text-muted); line-height:1.75; font-size:.92rem; }
 
         /* ── FOOTER ── */
-        .footer { border-top:1px solid var(--border); padding:4.5rem 2.5rem 2rem; background:linear-gradient(180deg,transparent,rgba(${accentRgb},.04)); }
+        .footer { border-top:1px solid var(--border); padding:4rem 2rem 2rem; background:linear-gradient(180deg,transparent,rgba(${accentRgb},.04)); position:relative; z-index:1; }
         .footer-inner { max-width:1200px; margin:0 auto; }
         .footer-grid { display:grid; grid-template-columns:2.2fr 1fr 1fr 1.8fr; gap:3rem; margin-bottom:2.5rem; }
         .footer-logo { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--text); margin-bottom:.5rem; display:flex; align-items:center; gap:.5rem; }
@@ -538,80 +811,151 @@ export default function FlowerShop() {
         .footer-social { display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap; }
         .footer-social a { display:flex; align-items:center; gap:.4rem; color:var(--text-muted); text-decoration:none; font-size:.8rem; background:var(--surface); border:1px solid var(--border); padding:.38rem .8rem; border-radius:20px; transition:all .25s; }
         .footer-social a:hover { border-color:var(--accent); color:var(--accent); }
-        .footer-bottom { border-top:1px solid var(--border); padding-top:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-        .footer-copy { color:var(--text-muted); font-size:.8rem; }
-        .footer-copy a { color:var(--accent); text-decoration:none; }
-        .footer-agency { font-size:.78rem; color:var(--text-muted); display:flex; align-items:center; gap:.4rem; }
+        .footer-bottom { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); padding-top:1.5rem; gap:1rem; flex-wrap:wrap; }
+        .footer-copy { color:var(--text-muted); font-size:.82rem; }
+        .footer-agency { color:var(--text-muted); font-size:.8rem; display:flex; align-items:center; gap:.4rem; }
+        .footer-agency a { color:var(--accent); text-decoration:none; }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width:1100px) {
-          .collections-grid { grid-template-columns:repeat(2,1fr); }
-          .collection-card.wide { grid-column:span 1; }
-          .products-grid { grid-template-columns:repeat(3,1fr); }
-          .florists-grid { grid-template-columns:repeat(2,1fr); }
-          .events-grid { grid-template-columns:repeat(3,1fr); }
-          .footer-grid { grid-template-columns:1fr 1fr; }
-          .why-grid { gap:3rem; }
+        /* ── MOBILE FIRST — RESPONSIVE ── */
+        @media (max-width: 1024px) {
+          .nav-links, .nav-delivery { display: none; }
+          .hamburger { display: flex; }
+          .nav-right .btn-accent { display: none; }
+          .hero-content { grid-template-columns: 1fr; gap: 2.5rem; text-align: center; }
+          .hero-right { display: none; }
+          .hero-body { max-width: 100%; }
+          .hero-buttons { justify-content: center; }
+          .trust-strip { justify-content: center; }
+          .collections-grid { grid-template-columns: repeat(2, 1fr); }
+          .collection-card.wide { grid-column: span 2; }
+          .products-grid { grid-template-columns: repeat(2, 1fr); }
+          .florists-grid { grid-template-columns: repeat(2, 1fr); }
+          .testimonials-grid { grid-template-columns: 1fr 1fr; }
+          .events-grid { grid-template-columns: repeat(3, 1fr); }
+          .why-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+          .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+          .process-steps { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+          .process-connector { display: none; }
+          .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+          .price-tiers-grid { grid-template-columns: repeat(2, 1fr); }
+          .wedding-grid { grid-template-columns: 1fr; }
+          .sub-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width:768px) {
-          .nav-links,.nav-right { display:none; }
-          .hamburger { display:flex; }
-          .hero-content { grid-template-columns:1fr; }
-          .hero-right { display:none; }
-          .stats-grid { grid-template-columns:repeat(2,1fr); }
-          .why-grid { grid-template-columns:1fr; }
-          .products-grid { grid-template-columns:repeat(2,1fr); }
-          .florists-grid { overflow-x:auto; display:flex; gap:1rem; padding-bottom:1rem; }
-          .florist-card { min-width:260px; flex-shrink:0; }
-          .process-steps { grid-template-columns:1fr 1fr; }
-          .process-connector { display:none; }
-          .testimonials-grid { grid-template-columns:1fr; }
-          .price-tiers-grid { grid-template-columns:repeat(2,1fr); }
-          .wedding-grid { grid-template-columns:1fr; }
-          .sub-grid { grid-template-columns:1fr; }
-          .events-grid { grid-template-columns:repeat(2,1fr); }
-          .contact-grid { grid-template-columns:1fr; }
-          .footer-grid { grid-template-columns:1fr; }
-          .collections-grid { grid-template-columns:1fr; }
-          .hero-line-1,.hero-line-2,.hero-line-3 { font-size:clamp(2.5rem,14vw,4rem); }
-          .form-grid-2 { grid-template-columns:1fr; }
-          .footer-bottom { flex-direction:column; text-align:center; }
+
+        @media (max-width: 640px) {
+          .nav { padding: .8rem 1.2rem; }
+          .hero { padding: 6rem 1.2rem 3.5rem; }
+          .hero-line-1, .hero-line-2, .hero-line-3 { font-size: clamp(2.2rem, 12vw, 3.5rem); }
+          .hero-buttons { flex-direction: column; align-items: stretch; }
+          .hero-buttons .btn-accent, .hero-buttons .btn-ghost { justify-content: center; }
+          .collections-grid { grid-template-columns: 1fr; }
+          .collection-card.wide { grid-column: span 1; }
+          .products-grid { grid-template-columns: 1fr; }
+          .florists-grid { grid-template-columns: 1fr; }
+          .testimonials-grid { grid-template-columns: 1fr; }
+          .events-grid { grid-template-columns: repeat(2, 1fr); }
+          .filter-tabs { gap: .4rem; }
+          .filter-tab { font-size: .78rem; padding: .4rem .9rem; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr); }
+          .price-tiers-grid { grid-template-columns: 1fr 1fr; }
+          .footer-grid { grid-template-columns: 1fr; gap: 1.8rem; }
+          .footer-bottom { flex-direction: column; align-items: flex-start; }
+          .section { padding: 3rem 1.2rem; }
+          .form-grid-2 { grid-template-columns: 1fr; }
+          .process-steps { grid-template-columns: 1fr 1fr; }
+          .sub-grid { grid-template-columns: 1fr; }
+          .form-card { padding: 1.4rem; }
         }
-        @media (max-width:480px) {
-          .products-grid { grid-template-columns:1fr; }
-          .price-tiers-grid { grid-template-columns:1fr; }
-          .events-grid { grid-template-columns:repeat(2,1fr); }
-          .process-steps { grid-template-columns:1fr; }
+
+        @media (max-width: 400px) {
+          .events-grid { grid-template-columns: 1fr 1fr; }
+          .price-tiers-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
+      {/* Floating background petals */}
+      <FloatingPetals accentRgb={accentRgb} />
+
       {/* NAV */}
-      <nav className={`nav ${navScrolled ? "scrolled" : ""}`}>
+      <nav className={`nav${navScrolled ? " scrolled" : ""}`}>
         <a href="#" className="nav-logo">
-          <Flower2 size={22} />
-          {SHOP.name}
+          <Flower2 size={22} /> {SHOP.name}
         </a>
         <ul className="nav-links">
-          {[["#collections","Koleksiýalar"],["#products","Çemenler"],["#florists","Floristler"],["#pricing","Bahalar"],["#contact","Habarlaş"]].map(([h,l]) => (
-            <li key={h}><a href={h}>{l}</a></li>
+          {navLinks.map(([href, label]) => (
+            <li key={href}><a href={href}>{label}</a></li>
           ))}
         </ul>
         <div className="nav-right">
-          <span className="nav-delivery"><Truck size={13} /> {SHOP.delivery} min Eltip Bermek</span>
-          <a href="#contact" className="btn-accent"><ShoppingBag size={15} /> Sargyt Et</a>
+          <span className="nav-delivery"><Truck size={12} /> {SHOP.delivery} min</span>
+          <a href="#contact" className="btn-accent hbtn"><Flower size={15} /> Sargyt</a>
+          <button className="hamburger" onClick={() => setMobileMenuOpen(true)} aria-label="Menýu">
+            <Menu size={20} />
+          </button>
         </div>
-        <button className="hamburger" onClick={() => setMobileMenuOpen(true)} aria-label="Menu">
-          <Menu size={24} />
-        </button>
       </nav>
 
       {/* MOBILE MENU */}
-      <div className={`mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
-        <button className="mobile-close" onClick={() => setMobileMenuOpen(false)}><X size={28} /></button>
-        {[["#collections","Koleksiýalar"],["#products","Çemenler"],["#florists","Floristler"],["#pricing","Bahalar"],["#contact","Habarlaş"]].map(([h,l]) => (
-          <a key={h} href={h} onClick={() => setMobileMenuOpen(false)}>{l}</a>
-        ))}
-        <a href={`tel:${SHOP.phone}`} style={{ fontSize: "1rem", color: "var(--accent)" }}>{SHOP.phone}</a>
+      <div className={`mobile-menu${mobileMenuOpen ? " open" : ""}`} role="dialog" aria-modal="true" aria-label="Navigasiýa">
+        {/* Decorative lines */}
+        <div className="mm-top-line" />
+        <div className="mm-bottom-line" />
+
+        {/* Corner SVGs */}
+        <svg className="mm-corner mm-corner-tl" viewBox="0 0 200 200" fill="none">
+          <circle cx="0" cy="0" r="100" stroke={`rgba(${accentRgb},.5)`} strokeWidth="1" fill="none" />
+          <circle cx="0" cy="0" r="70" stroke={`rgba(${accentRgb},.3)`} strokeWidth="1" fill="none" />
+          {[0,45,90,135].map((deg) => (
+            <line key={deg} x1="0" y1="0" x2="100" y2="0"
+              stroke={`rgba(${accentRgb},.2)`} strokeWidth="1"
+              transform={`rotate(${deg})`} />
+          ))}
+        </svg>
+        <svg className="mm-corner mm-corner-br" viewBox="0 0 200 200" fill="none">
+          <circle cx="200" cy="200" r="100" stroke={`rgba(${accentRgb},.5)`} strokeWidth="1" fill="none" />
+          <circle cx="200" cy="200" r="60" stroke={`rgba(${accentRgb},.25)`} strokeWidth="1" fill="none" />
+        </svg>
+
+        {/* Logo */}
+        <div className="mm-logo"><Flower2 size={20} /> {SHOP.name}</div>
+
+        {/* Close */}
+        <button className="mobile-close" onClick={() => setMobileMenuOpen(false)} aria-label="Ýap">
+          <X size={20} />
+        </button>
+
+        {/* Nav links */}
+        <ul className="mm-nav-list">
+          {navLinks.map(([href, label]) => (
+            <li key={href} className="mm-nav-item">
+              <a href={href} onClick={() => setMobileMenuOpen(false)}>{label}</a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mm-divider" />
+
+        {/* Social */}
+        <div className="mm-social">
+          {SHOP.instagram && (
+            <a href={`https://instagram.com/${SHOP.instagram}`} target="_blank" rel="noreferrer">
+              <Instagram size={14} /> Instagram
+            </a>
+          )}
+          {SHOP.telegram && (
+            <a href={`https://t.me/${SHOP.telegram}`} target="_blank" rel="noreferrer">
+              <Send size={14} /> Telegram
+            </a>
+          )}
+        </div>
+
+        {/* CTA */}
+        <div className="mm-cta">
+          <a href="#contact" className="btn-accent" onClick={() => setMobileMenuOpen(false)}>
+            <Flower size={15} /> Sargyt Beriň
+          </a>
+        </div>
       </div>
 
       {/* HERO */}
@@ -620,116 +964,97 @@ export default function FlowerShop() {
         <div className="hero-orb hero-orb-2" />
         <div className="hero-orb hero-orb-3" />
         <div className="dot-grid" />
-        <div className="petal-float" style={{ width: 100, height: 100, background: `rgba(${accentRgb},.05)`, top: "12%", left: "3%", "--dur": "8s" } as React.CSSProperties} />
-        <div className="petal-float" style={{ width: 70, height: 70, background: `rgba(${accentRgb},.04)`, top: "65%", left: "2%", "--dur": "10s" } as React.CSSProperties} />
-
         <div className="hero-content">
-          <div className="hero-left">
-            <div className="hero-badge">
-              <Star size={13} fill="currentColor" />
-              {SHOP.city} &middot; {SHOP.rating}★ &middot; {SHOP.reviews} teswir
-            </div>
+          <div>
+            <div className="hero-badge"><Sparkles size={13} /> {SHOP.city} — {SHOP.rating} ★ · {SHOP.reviews} Syn</div>
             <h1 className="hero-heading">
               <span className="hero-line-1">Duýgularyňy</span>
-              <span className="hero-line-2">güller bilen</span>
-              <span className="hero-line-3">aýt.</span>
+              <span className="hero-line-2">Güller</span>
+              <span className="hero-line-3">Bilen Aýt</span>
             </h1>
-            <p className="hero-tagline">— {SHOP.tagline}</p>
+            <div className="hero-tagline">✦ {SHOP.tagline} ✦</div>
             <p className="hero-body">
-              {SHOP.name} — {SHOP.city} şäherinde iň owadan gül çemenler,<br />
-              sowgat gutulary we buket dizaýny. {SHOP.orders} bagtly müşderimiz bar.
+              {SHOP.city} şäheriniň iň owadan gülleri. {SHOP.orders} bagtly müşderi, {SHOP.delivery} minutda eltip bermek, profesional florist topary bilen arzuwlaryňyzy hakykata öwürýäris.
             </p>
             <div className="hero-buttons">
-              <a href="#contact" className="btn-accent hbtn"><Flower size={16} /> Sargyt Et <ArrowRight size={15} /></a>
-              <a href="#collections" className="btn-ghost hbtn">Koleksiýalara Gör</a>
+              <a href="#contact" className="btn-accent hbtn"><ShoppingBag size={16} /> Sargyt Beriň</a>
+              <a href="#collections" className="btn-ghost hbtn"><Leaf size={16} /> Koleksiýalar</a>
             </div>
             <div className="trust-strip">
-              <span className="trust-item"><Truck size={14} /> {SHOP.delivery} min içinde</span>
-              <span className="trust-item"><Sparkles size={14} /> Täze güller her gün</span>
-              <span className="trust-item"><Ribbon size={14} /> Mugt gaplama</span>
+              <div className="trust-item"><CheckCircle size={14} /> Şol gün eltip bermek</div>
+              <div className="trust-item"><Star size={14} /> {SHOP.rating}/5 Baha</div>
+              <div className="trust-item"><Heart size={14} /> {SHOP.orders} Sargyt</div>
             </div>
           </div>
-
           <div className="hero-right">
             <div className="hero-img-wrap">
-              <img src={img("hero-bouquet.png")} alt="Premium güller" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              <div className="hero-img-fallback">
-                <Flower2 size={100} color={`rgba(${accentRgb},.4)`} />
-              </div>
+              <img src={UNS.heroMain} alt="Owadan gül buketi" loading="eager" />
+            </div>
+            <div className="floating-card">
+              <div className="fc-icon"><Truck size={16} /></div>
+              <div className="fc-title">Çalt Eltip Bermek</div>
+              <div className="fc-sub">{SHOP.delivery} min içinde</div>
             </div>
             <div className="floating-card">
               <div className="fc-stars">{[...Array(5)].map((_,i) => <Star key={i} size={11} fill="currentColor" />)}</div>
-              <div className="fc-title">Düýn iberildi</div>
-              <div className="fc-sub">"Örän owadan!" — Aýna</div>
+              <div className="fc-title">{SHOP.rating} Baha</div>
+              <div className="fc-sub">{SHOP.reviews} syn</div>
             </div>
             <div className="floating-card">
-              <div className="fc-icon"><Truck size={18} /></div>
-              <div className="fc-title">Çalt Eltip Bermek</div>
-              <div className="fc-sub">{SHOP.delivery} minut</div>
-            </div>
-            <div className="floating-card">
-              <div className="fc-icon"><Award size={18} /></div>
-              <div className="fc-title">{SHOP.orders}</div>
-              <div className="fc-sub">Bagtly Sargyt</div>
+              <div className="fc-icon"><Flower2 size={16} /></div>
+              <div className="fc-title">Täze Güller</div>
+              <div className="fc-sub">Her gün getiriler</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* STATS */}
-      <section className="stats-section" ref={statsRef}>
+      <div className="stats-section" ref={statsRef}>
         <div className="stats-grid">
           {[
-            { num: SHOP.orders, label: "Bagtly Sargyt", Icon: Heart },
-            { num: SHOP.rating + "★", label: "Ortaça Baha", Icon: Star },
-            { num: SHOP.reviews, label: "Müşderi Teswiri", Icon: MessageCircle },
-            { num: SHOP.delivery + " min", label: "Eltip Bermek Wagty", Icon: Truck },
-          ].map((s, i) => (
-            <div key={i} className="stat-item">
-              <div className="stat-icon"><s.Icon size={20} /></div>
-              <div className="stat-number">{s.num}</div>
-              <div className="stat-label">{s.label}</div>
+            { Icon: ShoppingBag, num: SHOP.orders, label: "Bagtly Sargyt" },
+            { Icon: Star, num: SHOP.rating, label: "Ortaça Baha" },
+            { Icon: Truck, num: `${SHOP.delivery} min`, label: "Eltip Bermek" },
+            { Icon: Flower2, num: "200+", label: "Gül Görnüşi" },
+          ].map(({ Icon, num, label }) => (
+            <div className="stat-item" key={label}>
+              <div className="stat-icon"><Icon size={22} /></div>
+              <div className="stat-number">{num}</div>
+              <div className="stat-label">{label}</div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* COLLECTIONS */}
       <section id="collections" className="section">
         <div className="section-header reveal">
           <div className="section-label">Koleksiýalar</div>
-          <h2 className="section-h2">Sizi Näme Üçin Getirdi?</h2>
-          <p className="section-sub">Duýgunuza laýyk çemen tapyň.</p>
+          <h2 className="section-h2">Her Pursata Ýörite Çemen</h2>
+          <p className="section-sub">Toýdan korporatiw çärä, söýgi sürprizinden möwsümleýin owadanlyga — her mümkinçilik üçin aýratyn çözgüt.</p>
         </div>
         <div className="collections-grid card-group">
-          {collections.map(c => (
-            <div key={c.id} className={`collection-card card-anim ${c.wide ? "wide" : ""}`}>
-              {c.img ? (
-                <div className="col-img-wrap">
-                  <div className="col-tag">{c.tag}</div>
-                  <img src={img(c.img)} alt={c.name} onError={e => {
-                    const wrap = (e.target as HTMLImageElement).parentElement!;
-                    wrap.style.background = c.gradient;
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }} />
-                </div>
-              ) : (
-                <div className="col-img-wrap">
-                  <div className="col-tag">{c.tag}</div>
-                  <div className="col-img-placeholder" style={{ background: c.gradient }}>
-                    <c.Icon size={48} color={`rgba(${accentRgb},.5)`} />
-                  </div>
-                </div>
-              )}
+          {collections.map(col => (
+            <div key={col.id} className={`collection-card card-anim${col.wide ? " wide" : ""}`}>
+              <div className="col-img-wrap" style={{ background: col.gradient }}>
+                {col.img
+                  ? <img src={col.img} alt={col.name} loading="lazy" />
+                  : <div className="col-img-placeholder" style={{ background: col.gradient }}>
+                      <col.Icon size={40} style={{ color: accent, opacity: .4 }} />
+                    </div>
+                }
+                <div className="col-tag">{col.tag}</div>
+              </div>
               <div className="col-body">
                 <div className="col-top">
-                  <div className="col-icon-wrap"><c.Icon size={18} /></div>
-                  <div className="col-name">{c.name}</div>
-                  <div className="col-desc">{c.desc}</div>
+                  <div className="col-icon-wrap"><col.Icon size={18} /></div>
+                  <div className="col-name">{col.name}</div>
+                  <div className="col-desc">{col.desc}</div>
                 </div>
                 <div className="col-footer">
-                  <div className="col-price">{c.priceFrom} TMT-dan · {c.items}</div>
-                  <div className="col-arrow"><ChevronRight size={18} /></div>
+                  <span className="col-price">{col.items} · {col.priceFrom} TMT-dan</span>
+                  <ChevronRight size={16} className="col-arrow" />
                 </div>
               </div>
             </div>
@@ -738,81 +1063,68 @@ export default function FlowerShop() {
       </section>
 
       {/* WHY US */}
-      <section className="why-section">
+      <div className="why-section">
         <div className="why-grid">
           <div className="reveal">
-            <h2 className="why-heading">Her çemen<br />bir hekaýa.</h2>
+            <div className="section-label" style={{ justifyContent: "flex-start" }}>Näme üçin biz?</div>
+            <h2 className="why-heading">Güller diňe<br />çiçek däl,<br /><em>duýgu</em></h2>
             <p className="why-body">
-              Biz diňe gül satmaýarys —<br />
-              duýgulary, ýatlamalary we möhüm pursatlary bezäp berýäris.
-            </p>
-            <p className="why-body">
-              {SHOP.name}, {SHOP.founded}-njy ýyldan bäri<br />
-              {SHOP.city} şäherinde bagtly pursatlar döredýär.
+              {SHOP.founded}-njy ýyldan bäri {SHOP.city} şäherinde. Her güli öz elimiz bilen saýlaýarys, her buketi ýüregimiz bilen düzýäris. Müşderimiz bagtly bolmasa, biz işimizi etmediris.
             </p>
             <div className="gold-divider" />
-            <p className="why-stats-inline"><strong>{SHOP.orders}</strong> sargyt · <strong>{SHOP.rating}★</strong> baha</p>
+            <div className="why-stats-inline">
+              <strong>{SHOP.orders}</strong> sargyt · <strong>{SHOP.rating}/5</strong> baha · <strong>{SHOP.reviews}</strong> syn · <strong>{SHOP.founded}</strong>-den bäri
+            </div>
           </div>
-          <div className="feature-list card-group">
+          <div className="feature-list reveal">
             {[
-              { Icon: Leaf, title: "Täze Güller, Her Gün", desc: `Floristlerimiz her irden bazara gidip iň täze gülleri saýlaýar.` },
-              { Icon: Scissors, title: "Hünärmen Floristler", desc: `5+ ýyllyk tejribeli dizaýnerlerimiz her çemeni eser hökmünde işleýär.` },
-              { Icon: Truck, title: `${SHOP.delivery} Min Eltip Bermek`, desc: `${SHOP.city} içinde. Sowadyjyly ulag bilen gül täze ýetýär.` },
-              { Icon: Ribbon, title: "Mugt Premium Gaplama", desc: `Her sargyt bilen mugt ribbon, sowgat haty we owadan gaplama.` },
-            ].map((f, i) => (
-              <div key={i} className="feature-item card-anim">
-                <div className="feature-icon-box"><f.Icon size={20} /></div>
+              { Icon: Truck, title: `${SHOP.delivery} Minutda Eltip Bermek`, desc: "Şäher içinde tiz we ygtybarly eltip bermek." },
+              { Icon: Scissors, title: "Şol Gün Kesilýän Güller", desc: "Her gün irden bakja we ýerli ekijiçilerden täze güller." },
+              { Icon: Ribbon, title: "Siz Üçin Özboluşly Dizaýn", desc: "Floristiňiz sizi diňleýär we arzuwlaryňyzy döredýär." },
+              { Icon: Camera, title: "Bermezden Öň Surata Düşürilýär", desc: "Buketi ibermezden öň suratyny WhatsApp/Telegram arkaly iberýäris." },
+            ].map(({ Icon, title, desc }) => (
+              <div className="feature-item" key={title}>
+                <div className="feature-icon-box"><Icon size={18} /></div>
                 <div>
-                  <div className="feature-title">{f.title}</div>
-                  <div className="feature-desc">{f.desc}</div>
+                  <div className="feature-title">{title}</div>
+                  <div className="feature-desc">{desc}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* PRODUCTS */}
       <section id="products" className="section">
         <div className="section-header reveal">
           <div className="section-label">Önümler</div>
-          <h2 className="section-h2">Iň Meşhur Çemenlerimiz</h2>
+          <h2 className="section-h2">Floristlerimizden Buketler</h2>
+          <p className="section-sub">Özboluşly el işi buketler, her biriniň öz hekaýasy bar.</p>
         </div>
         <div className="filter-tabs">
-          {[["all","Hemmesi"],["love","Söýgi"],["birthday","Doglan Gün"],["wedding","Toý"],["gift","Sowgat"],["corporate","Korporatiw"]].map(([id,label]) => (
-            <button key={id} className={`filter-tab ${activeFilter === id ? "active" : ""}`} onClick={() => setActiveFilter(id)}>{label}</button>
+          {[["all","Ählisi"],["love","Söýgi"],["wedding","Toý"],["birthday","D.Gün"],["gift","Sowgat"],["corporate","Korporatiw"],["seasonal","Möwsüm"]].map(([v,l]) => (
+            <button key={v} className={`filter-tab${activeFilter === v ? " active" : ""}`} onClick={() => setActiveFilter(v)}>{l}</button>
           ))}
         </div>
         <div className="products-grid card-group">
           {filteredProducts.map(p => (
             <div key={p.id} className="product-card card-anim">
-              <div className="product-img-wrap">
-                {p.img ? (
-                  <img className="p-img" src={img(p.img)} alt={p.name} onError={e => {
-                    const wrap = (e.target as HTMLImageElement).parentElement!;
-                    (e.target as HTMLImageElement).style.display = "none";
-                    wrap.style.background = p.gradient;
-                  }} />
-                ) : (
-                  <div className="p-img-fallback" style={{ background: p.gradient }}>
-                    <Flower2 size={56} color={`rgba(${accentRgb},.4)`} />
-                  </div>
-                )}
-                <span className="p-badge">{p.badge}</span>
-                <button className="p-wish"><Heart size={14} /></button>
+              <div className="product-img-wrap" style={{ background: p.gradient }}>
+                <img className="p-img" src={p.img} alt={p.name} loading="lazy" />
+                <div className="p-badge">{p.badge}</div>
+                <button className="p-wish" aria-label="Halanlarym"><Heart size={14} /></button>
               </div>
               <div className="product-info">
                 <div className="p-name">{p.name}</div>
-                <div className="p-flowers"><Leaf size={12} /> {p.flowers}</div>
+                <div className="p-flowers"><Leaf size={11} /> {p.flowers}</div>
                 <div className="p-size-tag">{p.size}</div>
                 <div className="p-price-row">
                   <span className="p-price">{p.price}</span>
                   <span className="p-currency">TMT</span>
                   {p.oldPrice && <span className="p-old">{p.oldPrice}</span>}
                 </div>
-                <button className="p-order-btn" onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
-                  <ShoppingBag size={14} /> Sargyt Et
-                </button>
+                <button className="p-order-btn"><ShoppingBag size={14} /> Sargyt Beriň</button>
               </div>
             </div>
           ))}
@@ -822,35 +1134,28 @@ export default function FlowerShop() {
       {/* FLORISTS */}
       <section id="florists" className="section">
         <div className="section-header reveal">
-          <div className="section-label">Hünärmenler</div>
-          <h2 className="section-h2">Çemenlerimizi Döredýän Hünärmenler</h2>
+          <div className="section-label">Toparymyz</div>
+          <h2 className="section-h2">Hünärmen Floristlerimiz</h2>
+          <p className="section-sub">Her biri öz sungatynyň ussady — gülleri dile getirýänler.</p>
         </div>
         <div className="florists-grid card-group">
-          {florists.map((f, i) => (
-            <div key={i} className="florist-card card-anim">
+          {florists.map(f => (
+            <div key={f.name} className="florist-card card-anim">
               <div className="florist-top">
-                <img src={img(f.img)} alt={f.name} onError={e => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }} />
-                <div className="florist-img-fallback" style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg,rgba(${accentRgb},.1),transparent)` }}>
-                  <Camera size={48} color={`rgba(${accentRgb},.3)`} />
-                </div>
-                <span className="florist-badge">{f.achievement}</span>
+                <img src={f.img} alt={f.name} loading="lazy" />
+                <div className="florist-badge">{f.cert}</div>
                 <div className="florist-overlay">
-                  <p className="florist-quote-text">"{f.quote}"</p>
+                  <div className="florist-quote-text">"{f.quote}"</div>
                 </div>
               </div>
               <div className="florist-bottom">
                 <div className="florist-name">{f.name}</div>
-                <div className="florist-role">{f.title}</div>
+                <div className="florist-role">{f.title} · {f.exp}</div>
                 <div className="florist-tags">
-                  <span className="florist-tag"><Clock size={10} /> {f.exp}</span>
-                  <span className="florist-tag"><Flower size={10} /> {f.specialty}</span>
-                  <span className="florist-tag"><Award size={10} /> {f.cert}</span>
+                  <span className="florist-tag"><Award size={10} /> {f.achievement}</span>
+                  <span className="florist-tag"><Scissors size={10} /> {f.specialty}</span>
                 </div>
-                <button className="florist-cta" onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
-                  <Phone size={14} /> Habarlaş
-                </button>
+                <button className="florist-cta"><Send size={13} /> Habarlaş</button>
               </div>
             </div>
           ))}
@@ -858,48 +1163,46 @@ export default function FlowerShop() {
       </section>
 
       {/* ORDER PROCESS */}
-      <section className="process-section">
+      <div className="process-section">
         <div className="section-header reveal">
-          <div className="section-label">Ädimler</div>
-          <h2 className="section-h2">Gül Almak Hiç Wagt Bu Çenli Aňsat Bolmandyr</h2>
+          <div className="section-label">Nädip Sargyt Bermeli?</div>
+          <h2 className="section-h2">Dört Ädimde Sargydyňyz</h2>
         </div>
-        <div className="process-steps reveal">
+        <div className="process-steps card-group">
           <div className="process-connector" />
           {[
-            { n: "01", Icon: Phone, title: "Habarlaş", desc: "Telefon ýa-da saýt arkaly sargyt ediň" },
-            { n: "02", Icon: Scissors, title: "Florist Saýlaýar", desc: "Hünärmen florist aýratyn çemeňizi işleýär" },
-            { n: "03", Icon: Truck, title: "Eltip Bermek", desc: `${SHOP.delivery} minut içinde gapyňyza gelýär` },
-            { n: "04", Icon: Heart, title: "Bagtly Pursat", desc: "Sargyt eliňize ýetýär, täze we owadan" },
-          ].map((s, i) => (
-            <div key={i} className="process-step">
-              <div className="step-number">Ädim {s.n}</div>
-              <div className="step-icon-circle"><s.Icon size={24} /></div>
-              <div className="step-title">{s.title}</div>
-              <div className="step-desc">{s.desc}</div>
+            { num: "01", Icon: MessageCircle, title: "Habarlaşyň", desc: "Telefon, Telegram ýa-da WhatsApp arkaly biz bilen habarlaşyň." },
+            { num: "02", Icon: Scissors, title: "Dizaýny Saýlaň", desc: "Floristimiz sizi diňlär we iň laýyk buketi teklip eder." },
+            { num: "03", Icon: Camera, title: "Surata Düşüriň", desc: "Buketi bermezden öň suratyny size iberýäris — razylyk soraýarys." },
+            { num: "04", Icon: Truck, title: "Eltip Bermek", desc: `${SHOP.delivery} minutda gapyňyza eltilýär ýa-da özüňiz alyp bilýärsiňiz.` },
+          ].map(({ num, Icon, title, desc }) => (
+            <div className="process-step card-anim" key={num}>
+              <div className="step-number">Ädim {num}</div>
+              <div className="step-icon-circle"><Icon size={24} /></div>
+              <div className="step-title">{title}</div>
+              <div className="step-desc">{desc}</div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* TESTIMONIALS */}
       <section className="section">
         <div className="section-header reveal">
-          <div className="section-label">Müşderi Teswirler</div>
-          <h2 className="section-h2">Olaryň Ýylgyryşy Biziň Iň Uly Baýragymyz</h2>
+          <div className="section-label">Syn & Teswirler</div>
+          <h2 className="section-h2">Müşderilerimiz Näme Diýýär?</h2>
+          <p className="section-sub">{SHOP.reviews} hakyky syndan iň gowy saýlananlar.</p>
         </div>
         <div className="testimonials-grid card-group">
-          {testimonials.map((t, i) => (
-            <div key={i} className="testimonial-card card-anim">
+          {testimonials.map(t => (
+            <div key={t.name} className="testimonial-card card-anim">
               <div className="t-quotemark">"</div>
-              <div className="t-stars">{[...Array(t.rating)].map((_,j) => <Star key={j} size={14} fill="currentColor" />)}</div>
+              <div className="t-stars">{[...Array(t.rating)].map((_,i) => <Star key={i} size={13} fill="currentColor" />)}</div>
               <div className="t-occasion"><Flower size={11} /> {t.occasion}</div>
               <div className="t-result">{t.result}</div>
-              <p className="t-text">{t.text}</p>
+              <div className="t-text">"{t.text}"</div>
               <div className="t-author">
-                <div className="t-avatar">
-                  <img src={img(t.avatar)} alt={t.name} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                  <div className="t-avatar-fallback"><Flower2 size={18} /></div>
-                </div>
+                <div className="t-avatar"><img src={t.avatar} alt={t.name} loading="lazy" /></div>
                 <div>
                   <div className="t-name">{t.name}</div>
                   <div className="t-role">{t.role}</div>
@@ -915,64 +1218,69 @@ export default function FlowerShop() {
       <section id="pricing" className="section">
         <div className="section-header reveal">
           <div className="section-label">Bahalar</div>
-          <h2 className="section-h2">Göwnüňizdäki Buket Üçin Dogry Baha</h2>
+          <h2 className="section-h2">Her Bujete Laýyk Çözgüt</h2>
+          <p className="section-sub">Aşakdaky bahalar takmynan. Floristimiz siziň bilen jikme-jik gürleşer.</p>
         </div>
-        <div className="price-tiers-grid reveal">
+
+        <div className="price-tiers-grid card-group">
           {[
-            { label: "başlangyç", price: "55", name: "Standart Buket", desc: "9–21 gül" },
-            { label: "orta", price: "120", name: "Orta Buket", desc: "25–51 gül" },
-            { label: "lüks", price: "250", name: "Lýuks Buket", desc: "51–101 gül" },
-            { label: "premium", price: "Ylalaşyk", name: "Özboluşly Sargyt", desc: "Doly dizaýn" },
-          ].map((p, i) => (
-            <div key={i} className="price-tier">
-              <div className="pt-label">{p.label}</div>
-              <div className="pt-price">{p.price !== "Ylalaşyk" ? `${p.price} TMT` : p.price}</div>
-              <div className="pt-name">{p.name}</div>
-              <div className="pt-desc">{p.desc}</div>
+            { label: "Başlangyç", price: "55", name: "Mini Buket", desc: "5–9 gül. Ýakymly gündelik sowgat." },
+            { label: "Orta", price: "95", name: "Klasik Buket", desc: "15–21 gül. Doglan gün we öý sowgady." },
+            { label: "Premium", price: "185", name: "Lýuks Buket", desc: "35–51 gül. Täsirli we owadan." },
+            { label: "Elite", price: "350+", name: "Aýratyn Sargyt", desc: "Islege görä. Çäk ýok." },
+          ].map(t => (
+            <div className="price-tier card-anim" key={t.label}>
+              <div className="pt-label">{t.label}</div>
+              <div className="pt-price">{t.price} <span style={{ fontSize: ".9rem" }}>TMT</span></div>
+              <div className="pt-name">{t.name}</div>
+              <div className="pt-desc">{t.desc}</div>
             </div>
           ))}
         </div>
 
-        <div className="section-header reveal" style={{ marginTop: "3.5rem", marginBottom: "2rem" }}>
-          <div className="section-label">Toý & Çäre</div>
-          <h2 className="section-h2" style={{ fontSize: "1.9rem" }}>Toý Paketleri</h2>
+        <div className="section-header reveal" style={{ marginTop: "3rem" }}>
+          <div className="section-label">Toý Paketleri</div>
+          <h2 className="section-h2" style={{ fontSize: "1.9rem" }}>Toý Gülleriniň Bahalary</h2>
         </div>
-        <div className="wedding-grid reveal">
+
+        <div className="wedding-grid card-group">
           {[
-            { name: "Bagtly Başlangyç", price: "1 200", popular: false, includes: ["Gelin buketi (35 gül)", "Döşde takylýan çemen (2 sany)", "Stol bezegi (5 stol)", "Toý torty bezegi"], note: "Kiçi we ýapyk toýlar üçin ideal" },
-            { name: "Arzuw Toýy", price: "3 500", popular: true, includes: ["Premium gelin buketi", "Döşde takylýan (10 sany)", "Stol bezegi (15 stol)", "Giriş bezegi", "Toý takhtasy bezegi", "Fotosurat gülleri"], note: "Iň meşhur toý paketi" },
-            { name: "Şa Toý", price: null, popular: false, includes: ["Çäksiz konzultasiýa", "Doly zal bezegi", "Özboluşly konsepsiýa", "Gün bütin hyzmat", "Gurnamak we ýygnamak", "Ähli islegleriňiz"], note: "Iň ýakymly günüňiz üçin" },
-          ].map((p, i) => (
-            <div key={i} className={`wp-card ${p.popular ? "popular" : ""}`}>
+            { name: "Ýönekeý Toý", price: "250", note: "Kiçi toý üçin", popular: false, items: ["Gelin buketi (25 gül)","2 Butaforiýa buketi","Nika stoly bezegi","Erkin gowşurmak"] },
+            { name: "Premium Toý", price: "550", note: "Iň meşhur paket", popular: true, items: ["Gelin buketi (51 gül)","Gelin ata göwünjeň buketi","Stol merkezleri (5)","Zal giriş bezegi","Florist gatnaşýar"] },
+            { name: "Lýuks Toý", price: "1200+", note: "Doly hyzmat", popular: false, items: ["Çäksiz güller","Ähli otag bezegi","2 florist + koordinator","24/7 goldaw","Foto pozisiýa"] },
+          ].map(p => (
+            <div key={p.name} className={`wp-card card-anim${p.popular ? " popular" : ""}`}>
               {p.popular && <div className="wp-popular-badge">Iň Meşhur</div>}
-              <div className="wp-price">{p.price ? <>{p.price} <sup>TMT</sup></> : <span style={{ color: "var(--accent)", fontSize: "1.5rem" }}>Ylalaşyk</span>}</div>
+              <div className="wp-price">{p.price} <sup>TMT</sup></div>
               <div className="wp-name">{p.name}</div>
               <div className="wp-note">{p.note}</div>
               <ul className="wp-list">
-                {p.includes.map((item, j) => <li key={j} className="wp-item"><CheckCircle size={14} /> {item}</li>)}
+                {p.items.map(it => (
+                  <li key={it} className="wp-item"><CheckCircle size={14} /> {it}</li>
+                ))}
               </ul>
+              <a href="#contact" className="btn-accent" style={{ marginTop: "1.4rem", width: "100%", justifyContent: "center" }}>Saýla</a>
             </div>
           ))}
         </div>
 
-        <div className="section-header reveal" style={{ marginTop: "3.5rem", marginBottom: "2rem" }}>
-          <div className="section-label">Abuna</div>
-          <h2 className="section-h2" style={{ fontSize: "1.9rem" }}>Abuna Hyzmat</h2>
+        <div className="section-header reveal" style={{ marginTop: "2.5rem" }}>
+          <div className="section-label">Abuna Hyzmat</div>
+          <h2 className="section-h2" style={{ fontSize: "1.9rem" }}>Hemişe Täze Güller</h2>
         </div>
-        <div className="sub-grid reveal">
+        <div className="sub-grid card-group">
           {[
-            { title: "Hepdelik", price: "280 TMT", detail: "1 buket / hepde" },
-            { title: "Aýlyk", price: "900 TMT", detail: "4 buket / aý — 3 hepde bahasy!" },
-          ].map((s, i) => (
-            <div key={i} className="sub-card">
+            { title: "Hepdelik Abuna", price: "180", detail: "Her duşenbe irden — ykjam buket", items: ["7 günde bir gün täze güller","Öý ýa-da ofis","Erkin düzmek","Islendik wagt ýatyrylmak"] },
+            { title: "Aýlyk Abuna", price: "320", detail: "Her aý iki gezek — lýuks buket", items: ["2 hepde bir gezek täze güller","Florist saýlawy ýa-da özüňiz saýlaýar","Degişli arzanlaşyk","Öýe gelip bermek"] },
+          ].map(s => (
+            <div key={s.title} className="sub-card card-anim">
               <div className="sub-title">{s.title}</div>
-              <div className="sub-price">{s.price}</div>
+              <div className="sub-price">{s.price} TMT <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>/ möwsüm</span></div>
               <div className="sub-detail">{s.detail}</div>
               <ul className="sub-list">
-                {["Awtomatik eltip bermek", "Her gezek täze dizaýn", "Islän wagtyňyz ýatyrmak", "Mugt gaplama hemişe"].map((f, j) => (
-                  <li key={j}><CheckCircle size={14} /> {f}</li>
-                ))}
+                {s.items.map(it => <li key={it}><CheckCircle size={13} /> {it}</li>)}
               </ul>
+              <a href="#contact" className="btn-accent" style={{ marginTop: "1.4rem", display: "inline-flex" }}>Başla</a>
             </div>
           ))}
         </div>
@@ -981,21 +1289,19 @@ export default function FlowerShop() {
       {/* EVENTS */}
       <section className="section">
         <div className="section-header reveal">
-          <div className="section-label">Pursatlar</div>
-          <h2 className="section-h2">Ýakyn Pursatlaryňyzy Ýatdan Çykarmaň</h2>
+          <div className="section-label">Möhüm Seneler</div>
+          <h2 className="section-h2">Baýramlary Unutmaň</h2>
+          <p className="section-sub">Ýakyn seneler — şu gün sargydyňyzy beriň!</p>
         </div>
         <div className="events-grid card-group">
-          {events.map((e, i) => {
-            const days = e.name === "Doglan Günler" ? 0 : daysUntil(e.month, e.day);
-            return (
-              <div key={i} className="event-card card-anim">
-                <div className="event-icon"><e.Icon size={22} /></div>
-                <div className="event-name">{e.name}</div>
-                <div className="event-sub">{e.subtitle}</div>
-                <span className="event-days">{days === 0 ? "Her gün!" : `${days} gün galdy`}</span>
-              </div>
-            );
-          })}
+          {events.map(ev => (
+            <div key={ev.name} className="event-card card-anim">
+              <div className="event-icon"><ev.Icon size={22} /></div>
+              <div className="event-name">{ev.name}</div>
+              <div className="event-sub">{ev.subtitle}</div>
+              <div className="event-days">{daysUntil(ev.month, ev.day)} gün galdy</div>
+            </div>
+          ))}
         </div>
       </section>
 
