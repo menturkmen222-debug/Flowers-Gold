@@ -150,7 +150,7 @@ export default function FlowerShop() {
   const params = new URLSearchParams(window.location.search);
   const SHOP = {
     name: params.get("name") || "Gül Dünýäsi",
-    tagline: params.get("tag") || "Duýgularyňy güller bilen aýt.",
+    tagline: params.get("tag") || "Har bir his, har bir lahza — gulda abadiy.",
     city: params.get("city") || "Aşgabat",
     phone: params.get("phone") || "+993 12 34-56-78",
     address: params.get("addr") || "Bitarap Türkmenistan şaýoly 22",
@@ -194,27 +194,33 @@ export default function FlowerShop() {
     const onScroll = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
 
-    gsap.set(".hero-badge", { x: -40, opacity: 0 });
-    gsap.set(".hero-line-1, .hero-line-2, .hero-line-3", { y: 80, opacity: 0 });
-    gsap.set(".hero-tagline", { opacity: 0 });
-    gsap.set(".hero-body", { y: 20, opacity: 0 });
-    gsap.set(".hero-buttons .hbtn", { y: 20, opacity: 0 });
-    gsap.set(".floating-card", { x: 60, opacity: 0 });
-    gsap.set(".trust-strip", { opacity: 0 });
-    gsap.set(".nav", { y: -80, opacity: 0 });
+    gsap.set(".hero-curtain",  { scaleY: 1, transformOrigin: "top center" });
+    gsap.set(".hero-badge",    { x: -50, opacity: 0, filter: "blur(8px)" });
+    gsap.set(".hero-line-1",   { y: 100, opacity: 0, scale: 0.86, filter: "blur(14px)" });
+    gsap.set(".hero-line-2",   { y: 100, opacity: 0, scale: 0.86, filter: "blur(14px)" });
+    gsap.set(".hero-line-3",   { y: 100, opacity: 0, scale: 0.86, filter: "blur(14px)" });
+    gsap.set(".hero-tagline",  { opacity: 0, y: 20, filter: "blur(6px)" });
+    gsap.set(".hero-body",     { y: 28, opacity: 0 });
+    gsap.set(".hero-buttons .hbtn", { y: 28, opacity: 0, scale: 0.94 });
+    gsap.set(".floating-card", { x: 80, opacity: 0, scale: 0.88 });
+    gsap.set(".trust-strip",   { opacity: 0, y: 12 });
+    gsap.set(".hero-img-wrap", { scale: 1.08, opacity: 0, filter: "blur(10px)" });
+    gsap.set(".nav",           { y: -80, opacity: 0 });
 
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
     tl
-      .to(".nav",            { y: 0, opacity: 1, duration: 0.6 })
-      .to(".hero-badge",     { x: 0, opacity: 1, duration: 0.5 }, "-=0.3")
-      .to(".hero-line-1",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.2")
-      .to(".hero-line-2",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.45")
-      .to(".hero-line-3",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.45")
-      .to(".hero-tagline",   { opacity: 1, duration: 0.5 }, "-=0.3")
-      .to(".hero-body",      { y: 0, opacity: 1, duration: 0.5 }, "-=0.3")
-      .to(".hero-buttons .hbtn", { y: 0, opacity: 1, duration: 0.5, stagger: 0.12 }, "-=0.2")
-      .to(".floating-card",  { x: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: "back.out(1.7)" }, "-=0.3")
-      .to(".trust-strip",    { opacity: 1, duration: 0.5 }, "-=0.2");
+      .to(".hero-curtain",   { scaleY: 0, duration: 1.1, ease: "expo.inOut" })
+      .to(".nav",            { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, "-=0.6")
+      .to(".hero-img-wrap",  { scale: 1, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" }, "-=0.7")
+      .to(".hero-badge",     { x: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "back.out(1.6)" }, "-=0.9")
+      .to(".hero-line-1",    { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, "-=0.5")
+      .to(".hero-line-2",    { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, "-=0.65")
+      .to(".hero-line-3",    { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, "-=0.65")
+      .to(".hero-tagline",   { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7 }, "-=0.4")
+      .to(".hero-body",      { y: 0, opacity: 1, duration: 0.6 }, "-=0.4")
+      .to(".hero-buttons .hbtn", { y: 0, opacity: 1, scale: 1, duration: 0.55, stagger: 0.13, ease: "back.out(1.4)" }, "-=0.35")
+      .to(".floating-card",  { x: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.14, ease: "back.out(1.8)" }, "-=0.4")
+      .to(".trust-strip",    { opacity: 1, y: 0, duration: 0.5 }, "-=0.25");
 
     const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
     revealEls.forEach(el => {
