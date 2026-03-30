@@ -222,33 +222,55 @@ export default function FlowerShop() {
       .to(".floating-card",  { x: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.14, ease: "back.out(1.8)" }, "-=0.4")
       .to(".trust-strip",    { opacity: 1, y: 0, duration: 0.5 }, "-=0.25");
 
-    const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
-    revealEls.forEach(el => {
+    // ── Enhanced scroll reveal system ──
+    const initReveal = (el: HTMLElement) => {
+      const type = el.dataset.reveal || "up";
+      el.style.willChange = "opacity, transform, filter";
       el.style.opacity = "0";
-      el.style.transform = "translateY(48px)";
-      el.style.transition = "opacity 0.75s cubic-bezier(.4,0,.2,1), transform 0.75s cubic-bezier(.4,0,.2,1)";
+      el.style.filter = "blur(8px)";
+      if (type === "left")  { el.style.transform = "translateX(-60px) scale(0.96)"; }
+      else if (type === "right") { el.style.transform = "translateX(60px) scale(0.96)"; }
+      else if (type === "scale") { el.style.transform = "scale(0.85)"; }
+      else { el.style.transform = "translateY(60px) scale(0.97)"; }
+      const delay = el.dataset.delay ? `${el.dataset.delay}ms` : "0ms";
+      el.style.transition = `opacity 0.8s cubic-bezier(.22,1,.36,1) ${delay}, transform 0.8s cubic-bezier(.22,1,.36,1) ${delay}, filter 0.8s cubic-bezier(.22,1,.36,1) ${delay}`;
+    };
+
+    const fireReveal = (el: HTMLElement) => {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      el.style.filter = "blur(0px)";
+    };
+
+    const revealEls = document.querySelectorAll<HTMLElement>(".reveal, .reveal-left, .reveal-right, .reveal-scale");
+    revealEls.forEach(el => {
+      if (el.classList.contains("reveal-left"))  el.dataset.reveal = "left";
+      else if (el.classList.contains("reveal-right")) el.dataset.reveal = "right";
+      else if (el.classList.contains("reveal-scale")) el.dataset.reveal = "scale";
+      else el.dataset.reveal = "up";
+      initReveal(el);
     });
 
     const cardGroups = document.querySelectorAll<HTMLElement>(".card-group");
     cardGroups.forEach(group => {
       const cards = group.querySelectorAll<HTMLElement>(".card-anim");
       cards.forEach(c => {
+        c.style.willChange = "opacity, transform, filter";
         c.style.opacity = "0";
-        c.style.transform = "translateY(55px)";
-        c.style.transition = "opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.4,0,.2,1)";
+        c.style.transform = "translateY(65px) scale(0.92)";
+        c.style.filter = "blur(6px)";
+        c.style.transition = "opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1), filter 0.7s cubic-bezier(.22,1,.36,1)";
       });
     });
 
     const ioReveal = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          el.style.opacity = "1";
-          el.style.transform = "translateY(0)";
-          ioReveal.unobserve(el);
+          fireReveal(entry.target as HTMLElement);
+          ioReveal.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
     revealEls.forEach(el => ioReveal.observe(el));
 
@@ -260,20 +282,50 @@ export default function FlowerShop() {
           cards.forEach((c, i) => {
             setTimeout(() => {
               c.style.opacity = "1";
-              c.style.transform = "translateY(0)";
-            }, i * 65);
+              c.style.transform = "none";
+              c.style.filter = "blur(0px)";
+            }, i * 80);
           });
           ioCards.unobserve(group);
         }
       });
-    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
+    }, { threshold: 0.06, rootMargin: "0px 0px -30px 0px" });
 
     cardGroups.forEach(g => ioCards.observe(g));
 
+    // ── Section header children stagger ──
+    const sectionHeaders = document.querySelectorAll<HTMLElement>(".section-header.reveal");
+    sectionHeaders.forEach(header => {
+      const children = header.querySelectorAll<HTMLElement>(".section-label, .section-h2, .section-sub");
+      children.forEach((child, i) => {
+        child.style.opacity = "0";
+        child.style.transform = "translateY(30px)";
+        child.style.filter = "blur(5px)";
+        child.style.transition = `opacity 0.7s cubic-bezier(.22,1,.36,1) ${i * 120}ms, transform 0.7s cubic-bezier(.22,1,.36,1) ${i * 120}ms, filter 0.7s cubic-bezier(.22,1,.36,1) ${i * 120}ms`;
+      });
+    });
+
+    const ioSectionHeaders = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const header = entry.target as HTMLElement;
+          header.querySelectorAll<HTMLElement>(".section-label, .section-h2, .section-sub").forEach(child => {
+            child.style.opacity = "1";
+            child.style.transform = "none";
+            child.style.filter = "blur(0px)";
+          });
+          ioSectionHeaders.unobserve(header);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+    sectionHeaders.forEach(h => ioSectionHeaders.observe(h));
+
     const fallback = setTimeout(() => {
-      document.querySelectorAll<HTMLElement>(".reveal, .card-anim").forEach(el => {
+      document.querySelectorAll<HTMLElement>(".reveal, .reveal-left, .reveal-right, .reveal-scale, .card-anim, .section-label, .section-h2, .section-sub").forEach(el => {
         el.style.opacity = "1";
         el.style.transform = "none";
+        el.style.filter = "none";
       });
       document.querySelectorAll<HTMLElement>(".nav,.hero-badge,.hero-line-1,.hero-line-2,.hero-line-3,.hero-tagline,.hero-body,.trust-strip,.floating-card,.hero-img-wrap").forEach(el => {
         el.style.opacity = "1";
@@ -295,6 +347,7 @@ export default function FlowerShop() {
       obs.disconnect();
       ioReveal.disconnect();
       ioCards.disconnect();
+      ioSectionHeaders.disconnect();
       clearTimeout(fallback);
       tl.kill();
     };
@@ -980,9 +1033,9 @@ export default function FlowerShop() {
           <div>
             <div className="hero-badge"><Sparkles size={13} /> {SHOP.city} — {SHOP.rating} ★ · {SHOP.reviews} Syn</div>
             <h1 className="hero-heading">
-              <span className="hero-line-1">Güller diňe</span>
-              <span className="hero-line-2">çemen däl —</span>
-              <span className="hero-line-3">bu duýgudyr.</span>
+              <span className="hero-line-1">Duýgularyňy</span>
+              <span className="hero-line-2">Güller</span>
+              <span className="hero-line-3">Bilen Aýt</span>
             </h1>
             <div className="hero-tagline">✦ {SHOP.tagline} ✦</div>
             <p className="hero-body">
@@ -1077,7 +1130,7 @@ export default function FlowerShop() {
       {/* WHY US */}
       <div className="why-section">
         <div className="why-grid">
-          <div className="reveal">
+          <div className="reveal-left">
             <div className="section-label" style={{ justifyContent: "flex-start" }}>Näme üçin biz?</div>
             <h2 className="why-heading">Güller diňe<br />çemen däl,<br /><em>duýgudyr</em></h2>
             <p className="why-body">
@@ -1088,7 +1141,7 @@ export default function FlowerShop() {
               <strong>{SHOP.orders}</strong> sargyt · <strong>{SHOP.rating}/5</strong> baha · <strong>{SHOP.reviews}</strong> syn · <strong>{SHOP.founded}</strong>-den bäri
             </div>
           </div>
-          <div className="feature-list reveal">
+          <div className="feature-list reveal-right">
             {[
               { Icon: Truck, title: `${SHOP.delivery} Minutda Eltip Bermek`, desc: "Şäher içinde tiz we ygtybarly eltip bermek." },
               { Icon: Scissors, title: "Şol Gün Kesilýän Güller", desc: "Her gün irden bakja we ýerli ekijiçilerden täze güller." },
