@@ -1,0 +1,1156 @@
+# 🌸 REPLIT AI AGENT — GÜL DÜKANY & SOWGATLYKLAR
+## White-Label Auto-Personalization | Ýeňil Web Agency Demo System
+
+---
+
+## 🎯 NÄMÄ GURÝARSYŇ
+
+Bir **premium gül we sowgatlyk dükanynyň saýtyny** gurýarsyň — ýöne bu saýt URL parametrleri esasynda özüni **awtomatik şahsylaşdyrýar**. Ýeňil web agentligi bu saýty müşderilerine şu görnüşde iberýär:
+
+```
+https://yenil.ru/flowers?name=Gül+Dünýäsi&city=Aşgabat&color=E91E8C&phone=%2B99312345678
+```
+
+Havola açylanda — doly şahsylaşdyrylan, professional gül dükanynyň saýty görünýär. Müşderi: *"Bu meniň dükanym!"* diýýär. Hiç hili backend ýok, hiç hili databaza ýok.
+
+---
+
+## 🛠️ TEHNIKI TALAP
+
+```
+Gurluş:     Ýeke faýl — index.html (HTML + CSS + JS hemmesi içinde)
+Animasiýa:  GSAP 3 (CDN) + CSS keyframes
+Şriftler:   Google Fonts (CDN)
+Ikonlar:    Lucide Icons (CDN) + Unicode emoji aksentler
+Goşmaça:    Hiç hili framework, hiç hili build, brauzerde göni işleýär
+```
+
+**Sahypa 1800–3000 setirleri bolmaly.** Her setir maksady hyzmat etmeli.
+
+---
+
+## 🌈 URL PARAMETR ULGAMY
+
+```javascript
+const params = new URLSearchParams(window.location.search);
+
+const SHOP = {
+  name:       params.get('name')     || 'Gül Dünýäsi',
+  tagline:    params.get('tag')      || 'Duýgularyňy güller bilen aýt.',
+  city:       params.get('city')     || 'Aşgabat',
+  phone:      params.get('phone')    || '+993 12 34-56-78',
+  address:    params.get('addr')     || 'Bitarap Türkmenistan şaýoly 22',
+  color:      params.get('color')    || 'E91E8C',   // Hex, # ýok
+  color2:     params.get('color2')   || 'FF6B9D',   // ikinji gradient reňk
+  colorDark:  params.get('colord')   || null,
+  instagram:  params.get('ig')       || 'guldunyasi',
+  telegram:   params.get('tg')       || 'guldunyasi_tm',
+  whatsapp:   params.get('wa')       || '',
+  founded:    params.get('est')      || '2018',
+  orders:     params.get('orders')   || '5000+',
+  rating:     params.get('rating')   || '4.9',
+  reviews:    params.get('reviews')  || '320+',
+  delivery:   params.get('delivery') || '60',       // Eltip bermek wagty (minut)
+  logo:       params.get('logo')     || null,
+  theme:      params.get('theme')    || 'dark',     // 'dark' ýa-da 'light'
+};
+
+// Ähli saýtda CSS custom property hökmünde ulanyş
+document.documentElement.style.setProperty('--accent', '#' + SHOP.color);
+document.documentElement.style.setProperty('--accent2', '#' + SHOP.color2);
+
+// Reňkden RGB awtomatik çykarmak (glow effektleri üçin)
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(0,2), 16);
+  const g = parseInt(hex.slice(2,4), 16);
+  const b = parseInt(hex.slice(4,6), 16);
+  return `${r}, ${g}, ${b}`;
+}
+document.documentElement.style.setProperty('--accent-rgb', hexToRgb(SHOP.color));
+```
+
+**SAHYPADAKY HER SÖZI** SHOP obýektinden almaly. Hiç hili hardcoded dükana degişli maglumat ýok.
+
+---
+
+## 🎨 DIZAÝN UGRY — ROMANTIK LÝUKS PREMIUM
+
+**Estetika:** Pariž güllük dükany + häzirki zaman lýuks e-commerce + emosional editorial magazine.  
+**Söz:** Inçe, romantik, güýçli, arzuw ettirýän.
+
+### Reňk Ulgamy (CSS Variables):
+```css
+:root {
+  /* Accent — URL-dan gelýär */
+  --accent:          #E91E8C;   /* Default: janly gülgüne */
+  --accent2:         #FF6B9D;   /* Açyk gradient */
+  --accent-rgb:      233, 30, 140;
+
+  /* Fon (dark tema) */
+  --bg:              #080608;   /* Iň garaňky — gül reňkleri has parlap görünýär */
+  --surface:         #120E11;   /* Kart fony */
+  --surface2:        #1C1520;   /* Ýokary kart fony */
+  --border:          rgba(233, 30, 140, 0.15);
+
+  /* Tekst */
+  --text:            #FAF7F9;   /* Ýyly ak */
+  --text-muted:      #9B8DA0;   /* Soluk mawy-çal */
+  --text-dark:       #3D2E38;   /* Garaňky tekst (light temada) */
+
+  /* Premium aksentler */
+  --gold:            #C9A84C;   /* Premium altyn */
+  --gold-light:      #E8C96B;
+  --cream:           #FDF6F0;   /* Kremli ak */
+  --rose:            #FFE4F0;   /* Açyk gülgüne fon */
+}
+```
+
+### Şrift Saýlawy (HÖKMAN):
+```
+Display/Logo:   'Cormorant Garamond' — romantik, lýuks, alta moda
+Headings:       'Playfair Display' — editorial, köne kitap, owadan
+Body:           'DM Sans' — arassa, okalýar, häzirki zaman
+Accent/Price:   'Space Grotesk' — bahalar, sanlar, taglar
+```
+
+### Wizual Gol Elementi:
+Her bölümde gaýtalanýan **gül petal şekili** — SVG esasynda, accent reňkde, aç-açan, fon hökmünde. Aýlanyş animasiýasy bilen (slowRotate 30s linear infinite).
+
+---
+
+## 📁 ÄHLI BÖLÜMLER — DOLY TEHNIKI ŞARTNAMALAr
+
+---
+
+### BÖLÜM 0: HEAD
+
+```html
+<title>[SHOP.name] — [SHOP.city] | Güller & Sowgatlyklar</title>
+<meta name="description" 
+  content="[SHOP.city] şäherinde iň owadan gül çemenler we sowgatlyklar. 
+  [SHOP.delivery] minutda eltip bermek. [SHOP.name] — [SHOP.tagline]">
+<meta name="theme-color" content="#[SHOP.color]">
+<!-- Dinamik favicon: ilkinji harp + gül emoji -->
+```
+
+**Dinamik Favicon (JS bilen SVG):**
+```javascript
+const faviconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="8" fill="#${SHOP.color}"/>
+  <text x="50%" y="68%" text-anchor="middle" 
+        font-family="serif" font-size="20" fill="white">
+    ${SHOP.name.charAt(0)}
+  </text>
+</svg>`;
+// Base64 edip link rel="icon" tagyna ber
+```
+
+---
+
+### BÖLÜM 1: NAWIGASIÝA (Sticky, Üýtgeýän)
+
+**Scroll öňünde:**
+- Doly aç-açan fon (`background: transparent`)
+- Logo ak reňkde, nawigasiýa linkleri muted
+
+**Scroll soňra (JS bilen):**
+```css
+.nav.scrolled {
+  background: rgba(8, 6, 8, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.2);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.4);
+}
+```
+
+**Desktop düzlügi:**
+- **Çep:** Logo (SHOP.logo bar bolsa şekil, ýok bolsa: owadan tekst + gül emoji)
+- **Merkez:** Nav linkleri — `Baş · Koleksiýalar · Waka Gülleri · Sowgat Gutulary · Bahalar · Habarlaş`
+- **Sag:** `📦 [SHOP.delivery] min Eltip Bermek` açyk açyk etiketi + `Sargyt Et` CTA düwmesi
+
+**Hover effekti nawigasiýa linklerinde:**
+Liniýa bolman — kiçijik gül 🌸 emoji aşakdan peýda bolýar (transform: translateY → scale-in)
+
+**Mobil:**
+- Çep: Logo
+- Sag: Hamburger (3 setir → X animasiýasy) + wagzal ikony (sowgatçy)
+- Açyk mobil menýu: Garaňky overlay, linkler merkezde, uly şrift
+- Menýu içinde telefon we sosial ikonlar
+
+---
+
+### BÖLÜM 2: HERO — TAM EKRAN EMOSIONAL TÄSIR
+
+**Maksat:** Açylanda girende adam DUR etsin. Göwnüniň töründe bir zat gozgalmagy hökman.
+
+**Fon Dizaýny (CSS only, surat ýok):**
+1. Garaňky fon (`--bg`)
+2. Merkezdäki uly petal şekli — SVG, accent reňk, `filter: blur(80px)`, `opacity: 0.18`, aýlanyş animasiýasy
+3. Açyk petal şekilleri köp, dürli ululykda, dürli opasitete, flaot animasiýasy
+4. Inçe gözeneçek pattern: `background-image: radial-gradient(circle, rgba(var(--accent-rgb),0.08) 1px, transparent 1px)`; 24px aralyk
+5. Saga çüýşe effekti: köne gül gülleri ýaly abstrak şekiller — CSS border-radius amaly
+6. Aşak: SVG tolkunly bölüji, sahypa agşam girijini bölüp geçýär
+
+**Mazmuny (Asymmetrikal, çep agyr):**
+
+```
+[Ýokardaky kiçijik belgi — pill şekli]
+🌹 [SHOP.city] · [SHOP.rating]★ · [SHOP.reviews] teswir
+
+[Uly, Playfair Display, italic headling]
+Duýgularyňy
+güller bilen
+aýt.
+
+[Cormorant Garamond-da kiçijik altynym ýazgy]  
+— [SHOP.tagline]
+
+[Body tekst, muted]
+[SHOP.name] — [SHOP.city] şäherinde iň owadan  
+gül çemenler, sowgat gutulary we buket dizaýny.
+[SHOP.orders] bagtly müşderimiz bar.
+
+[Iki düwme]
+[🌸 Sargyt Et →]  [Koleksiýalara Gör ↓]
+
+[Aşakda ynandyryjy zolak]
+⚡ [SHOP.delivery] min içinde · 🌷 Täze güller her gün · 🎁 Mugt gaplama
+```
+
+**Sag tarap — Ýüzýän Sowgat Kartoçkalary (Float animation):**
+
+3 sany ýüzýän kiçijik kart, dürli pozisiýalarda, dürli animasiýa wagtlary:
+
+```
+┌─────────────────┐   (float, 3s)
+│ 💐 Düýn iberildi │
+│ ★★★★★            │
+│ "Örän owadan!"  │
+└─────────────────┘
+
+        ┌──────────────┐  (float, 4s)
+        │ 🚀 Çalt Eltip │
+        │ [SHOP.delivery] min │
+        └──────────────┘
+
+┌──────────────────┐  (float, 5s)
+│ 🌹 [SHOP.orders]  │
+│    Bagtly Sargyt  │
+└──────────────────┘
+```
+
+---
+
+### BÖLÜM 3: STAT ZOLAGY
+
+Full-width garaňky zolak, accent gradient soluk fon bilen:
+
+```
+[SHOP.orders]      [SHOP.rating]★       [SHOP.reviews]        [SHOP.delivery] min
+Bagtly Sargyt    Ortaça Baha        Müşderi Teswiri      Eltip Bermek Wagty
+```
+
+Sanlar görnüşe girende **count-up animasiýasy** (Intersection Observer bilen).
+
+---
+
+### BÖLÜM 4: KOLEKSIÝALAR — DOLY SHOWCASE
+
+**Ýokary bölüm:**
+```
+Sizi Näme Üçin Geldi?
+Duýgunuza laýyk çemen tapyň.
+```
+
+**8 koleksiýa kartoçkasy — Magazine Grid (equal däl, döredijilikli):**
+
+```
+Dizaýn:
+Setir 1: [Giň kart — Söýgi]  [Giň kart — Toý]
+Setir 2: [Kart] [Kart] [Kart]
+Setir 3: [Giň kart — Korporatiw] [Giň kart — Premium]
+```
+
+```javascript
+const collections = [
+  {
+    id: "love",
+    emoji: "❤️",
+    name: "Söýgi & Romantika",
+    desc: "Ýüregiňizdäki duýgulary beýan ediň. Gyzyl güller, ýuwaş reňkler, serêntäk gaplama.",
+    items: "45+ görnüş",
+    priceFrom: "85",
+    gradient: "from-rose-900 to-red-950",
+    tag: "Iň Meşhur",
+    icon_shape: "heart"
+  },
+  {
+    id: "wedding",
+    emoji: "💍",
+    name: "Toý & Nikaý",
+    desc: "Ömrüňiziň iň möhüm gününde. Gelin buketi, zal bezegi, süpürenç gülleri.",
+    items: "30+ paket",
+    priceFrom: "250",
+    gradient: "from-pink-900 to-rose-950",
+    tag: "Premium",
+    icon_shape: "ring"
+  },
+  {
+    id: "birthday",
+    emoji: "🎂",
+    name: "Doglan Gün",
+    desc: "Ýakynlaryňyzy begendiriň. Ýaşyna we zowkuna görä özboluşly buketi.",
+    items: "60+ görnüş",
+    priceFrom: "55",
+    gradient: "from-purple-900 to-pink-950",
+    tag: "Her Ýaş Üçin",
+    icon_shape: "balloon"
+  },
+  {
+    id: "corporate",
+    emoji: "🏢",
+    name: "Korporatiw Sargytlar",
+    desc: "Ofis bezegi, konferensiýa gülleri, iş partnýorlaryna sowgat çözgütleri.",
+    items: "Aýratyn dizaýn",
+    priceFrom: "200",
+    gradient: "from-slate-900 to-gray-950",
+    tag: "B2B",
+    icon_shape: "building"
+  },
+  {
+    id: "sympathy",
+    emoji: "🕊️",
+    name: "Hormat & Sadaka",
+    desc: "Kyn wagtlarda ýanyňyzda bolmak. Içgin we hormatly çemenler.",
+    items: "20+ görnüş",
+    priceFrom: "70",
+    gradient: "from-gray-800 to-slate-950",
+    tag: "Inçe",
+    icon_shape: "dove"
+  },
+  {
+    id: "seasonal",
+    emoji: "🌸",
+    name: "Möwsümleýin Güller",
+    desc: "Bahar, tomus, güýz we gyş. Her möwsümiň iň owadan gülleri.",
+    items: "Möwsüme görä",
+    priceFrom: "45",
+    gradient: "from-green-900 to-emerald-950",
+    tag: "Täze",
+    icon_shape: "leaf"
+  },
+  {
+    id: "boxes",
+    emoji: "🎁",
+    name: "Sowgat Gutulary",
+    desc: "Güller + şokolad + yşk şemi + şahsy hat. Doly duýgy bukjasy.",
+    items: "25+ kombinasiýa",
+    priceFrom: "120",
+    gradient: "from-amber-900 to-yellow-950",
+    tag: "Doly Set",
+    icon_shape: "gift"
+  },
+  {
+    id: "subscription",
+    emoji: "📅",
+    name: "Abuna Hyzmat",
+    desc: "Her hepde ýa-da her aý öýüňize, ofisiňize täze güller geler. Awtomatik bagtlylyk.",
+    items: "Aýlyk / Hepdelik",
+    priceFrom: "180",
+    gradient: "from-violet-900 to-purple-950",
+    tag: "🔥 Täzelik",
+    icon_shape: "calendar"
+  }
+];
+```
+
+**Koleksiýa Kartoçkasy Dizaýny:**
+- Gradient fon (dürli her kart)
+- Uly emoji merkez-ýokarda, aýlanyş animasiýasy hover-da
+- Aşakda isim (Playfair), açyklama (DM Sans muted), `[priceFrom] TMT-dan` badge
+- Sag aşakda: `→` düwmesi hover-da peýda bolýar
+- Hover: Kartoçka ýokaryk galýar (translateY -6px) + accent glow shadow çykýar
+- Tag (Iň Meşhur / Premium) — çep ýokarda ýüzýän badge
+
+---
+
+### BÖLÜM 5: HÜNAR BÖLÜMI — "NÄME ÜÇIN BIZ"
+
+**Wizual stil:** Garaňky bölüm, çepde uly romantik söz, sagda feature list.
+
+**Çep tarap (60% giňlik):**
+```
+[Cormorant Garamond, uly italic]
+Her çemen
+bir hekaýa.
+
+[Kiçijik body tekst]
+Biz diňe gül satmaýarys —  
+duýgulary, ýatlamalary we  
+möhüm pursatlary bezäp berýäris.
+
+[SHOP.name], [SHOP.founded]-njy ýyldan bäri
+[SHOP.city] şäherinde bagtly pursatlar döredýär.
+
+[Gold divider line]
+[SHOP.orders] sargyt. [SHOP.rating]★ baha.
+```
+
+**Sag tarap — 4 feature:**
+```
+🌿  Täze Güller, Her Gün
+    Floristlerimiz her irden bazara 
+    gidip iň täze gülleri saýlaýar.
+
+✂️  Hünärmen Floristler
+    5+ ýyllyk tejribeli dizaýnerlerimiz
+    her çemeni eser hökmünde işleýär.
+
+🚀  [SHOP.delivery] Min Eltip Bermek
+    [SHOP.city] içinde. Sowadyjyly 
+    ulag bilen gül täze ýetýär.
+
+🎀  Mugt Premium Gaplama
+    Her sargyt bilen mugt ribbon,
+    sowgat haty we owadan gaplama.
+```
+
+Sag feature-lar viewport-a girenlerinde sagdan çep ýöreýär, 0.15s stagger bilen.
+
+---
+
+### BÖLÜM 6: ÖNÜMLER — GÖRKEZME KARTOÇKALARY
+
+**Başlyk:** `Iň Meşhur Çemenlerimiz`
+
+**Filter tab-lary:**
+```
+[Hemmesi] [Söýgi] [Doglan Gün] [Toý] [Sowgat] [Korporatiw]
+```
+Tab üýtgände kartoçkalar smooth fade+scale animasiýasy bilen geçýär.
+
+**12 önüm kartoçkasy (3 setir × 4 sütun desktop, 2×mobile):**
+
+```javascript
+const products = [
+  {
+    id: 1,
+    name: "Gyzyl Gül Neoklassik",
+    category: "love",
+    flowers: "51 gyzyl gül",
+    size: "Uly",
+    freshness: "48 sagat kepillik",
+    price: 185,
+    oldPrice: 220,
+    badge: "🔥 Iň Köp Satylýan",
+    emoji: "🌹",
+    gradient: "linear-gradient(135deg, #1a0010, #3d0020)",
+  },
+  {
+    id: 2,
+    name: "Ak Lale Arzuw",
+    category: "wedding",
+    flowers: "25 ak lale + pip",
+    size: "Orta",
+    freshness: "72 sagat kepillik",
+    price: 145,
+    oldPrice: null,
+    badge: "💍 Toý Saýlawy",
+    emoji: "🌷",
+    gradient: "linear-gradient(135deg, #0d0010, #200015)",
+  },
+  {
+    id: 3,
+    name: "Pastel Buket Sürprizi",
+    category: "birthday",
+    flowers: "Garylyk pastel güller",
+    size: "Orta",
+    freshness: "48 sagat",
+    price: 95,
+    oldPrice: 115,
+    badge: "🎂 Doglan Gün Hit",
+    emoji: "💐",
+    gradient: "linear-gradient(135deg, #130010, #280025)",
+  },
+  {
+    id: 4,
+    name: "Premium Sowgat Gutusy",
+    category: "gift",
+    flowers: "Güller + Ferrero + Şem",
+    size: "Premium",
+    freshness: "Doly set",
+    price: 245,
+    oldPrice: null,
+    badge: "⭐ Premium",
+    emoji: "🎁",
+    gradient: "linear-gradient(135deg, #100d00, #201800)",
+  },
+  {
+    id: 5,
+    name: "Lüks Gelin Buketi",
+    category: "wedding",
+    flowers: "Awen + Gül + Pip",
+    size: "Toý",
+    freshness: "Sargyt esasynda",
+    price: 380,
+    oldPrice: null,
+    badge: "💎 Lýuks",
+    emoji: "👰",
+    gradient: "linear-gradient(135deg, #0a0808, #1a1015)",
+  },
+  {
+    id: 6,
+    name: "Gün Şöhlesi Buketi",
+    category: "birthday",
+    flowers: "Gün gülü + Sary güller",
+    size: "Kiçi",
+    freshness: "48 sagat",
+    price: 65,
+    oldPrice: 80,
+    badge: "☀️ Şadyýan",
+    emoji: "🌻",
+    gradient: "linear-gradient(135deg, #100a00, #201200)",
+  },
+  {
+    id: 7,
+    name: "Korporatiw Stol Bezegi",
+    category: "corporate",
+    flowers: "Ak + Ýaşyl garylyk",
+    size: "Ofis",
+    freshness: "Hepdelik abuna",
+    price: 120,
+    oldPrice: null,
+    badge: "🏢 B2B",
+    emoji: "🌿",
+    gradient: "linear-gradient(135deg, #050a08, #0d1510)",
+  },
+  {
+    id: 8,
+    name: "Möwsüm Sürpriz Buketi",
+    category: "seasonal",
+    flowers: "Florist saýlawy",
+    size: "Orta",
+    freshness: "Her gün täze",
+    price: 75,
+    oldPrice: null,
+    badge: "🌸 Täze",
+    emoji: "🌺",
+    gradient: "linear-gradient(135deg, #080010, #120018)",
+  },
+  {
+    id: 9,
+    name: "100 Gül Geçirimli Galpak",
+    category: "love",
+    flowers: "100 dürli reňkli gül",
+    size: "Uly-Premium",
+    freshness: "48 sagat",
+    price: 420,
+    oldPrice: 500,
+    badge: "❤️ Wау Effekt",
+    emoji: "🎪",
+    gradient: "linear-gradient(135deg, #140010, #2a0020)",
+  },
+  {
+    id: 10,
+    name: "Ýatlamaçy Çemen Gutusy",
+    category: "sympathy",
+    flowers: "Ak we mawy güller",
+    size: "Orta",
+    freshness: "48 sagat",
+    price: 115,
+    oldPrice: null,
+    badge: "🕊️ Hormat",
+    emoji: "💙",
+    gradient: "linear-gradient(135deg, #050810, #0a1018)",
+  },
+  {
+    id: 11,
+    name: "Söýgi Sandyk Sowgat",
+    category: "gift",
+    flowers: "Sandyk + Güller + Şokolad + Parfum",
+    size: "Premium Set",
+    freshness: "Doly bukja",
+    price: 350,
+    oldPrice: 420,
+    badge: "💝 Bestseller",
+    emoji: "🧺",
+    gradient: "linear-gradient(135deg, #120008, #220012)",
+  },
+  {
+    id: 12,
+    name: "Hepdelik Ofis Abunasy",
+    category: "corporate",
+    flowers: "Her hepde awtomatik",
+    size: "Abuna",
+    freshness: "Täze her hepde",
+    price: 280,
+    oldPrice: null,
+    badge: "📅 Abuna",
+    emoji: "📅",
+    gradient: "linear-gradient(135deg, #080510, #120a1a)",
+  }
+];
+```
+
+**Önüm Kartoçkasy Dizaýny:**
+- Gradient fon (surat ýok, doly CSS gradient)
+- Merkezde uly emoji (80px), ýumşak ýüzýän animasiýa
+- Badge ýokarda çepde — accent pill
+- Aşakda: At, güller düzümi, ululyk tagi
+- Baha: Uly `Space Grotesk`, eski baha üstünden çyzylan (line-through, muted)
+- `TMT` bellik: kiçijik, muted
+- **Hover effekti:**
+  - Kartoçka ýokaryk galýar (translateY: -8px)
+  - Accent glow shadow: `box-shadow: 0 20px 60px rgba(var(--accent-rgb), 0.25)`
+  - Emoji biraz ulalýar (scale: 1.1)
+  - Aşakdan "Sargyt Et" düwmesi çykýar (translateY: 0 ← 20px animasiýa)
+  - "Halanlara Goş ♡" ikonjasy çykýar sag ýokarda
+
+---
+
+### BÖLÜM 7: FLORISTLER — ŞAHSYLAŞDYRYLAN GÖRKEZME
+
+**Başlyk:** `Çemenlerimizi Döredýän Hünärmenler`
+
+**4 florist kartoçkasy:**
+
+```javascript
+const florists = [
+  {
+    name: "Maýagül Nurlyýewa",
+    title: "Baş Florist & Dizaýner",
+    exp: "9 Ýyl",
+    specialty: "Toý & Lýuks Bukety",
+    cert: "Ýewropa Sertifikatly",
+    emoji: "👩‍🌾",
+    achievement: "500+ Toý Buketi",
+    quote: "Her gül öz dilinde gürleýär. Men diňe terjimeçi.",
+    bgAccent: "rose"
+  },
+  {
+    name: "Güljeren Orazowa",
+    title: "Korporatiw Florist",
+    exp: "6 Ýyl",
+    specialty: "Ofis & Çäre Bezegi",
+    cert: "B2B Hünärmen",
+    emoji: "💼",
+    achievement: "200+ Korporatiw Müşderi",
+    quote: "Içerki bezeg işiň dilidir.",
+    bgAccent: "green"
+  },
+  {
+    name: "Leýli Annagylyjowa",
+    title: "Söýgi Buketi Spesialisti",
+    exp: "7 Ýyl",
+    specialty: "Romantik Çemenler",
+    cert: "Floristika Ussady",
+    emoji: "💝",
+    achievement: "1000+ Söýgi Buketi",
+    quote: "Güller söz bilen düşündirip bolmajak zady aýdýar.",
+    bgAccent: "pink"
+  },
+  {
+    name: "Aýgözel Durdyýewa",
+    title: "Kreatiw Dizaýner",
+    exp: "4 Ýyl",
+    specialty: "Eksperimental & Täze Görnüş",
+    cert: "Halkara Bäsleşik Ýeňijisi",
+    emoji: "🎨",
+    achievement: "3x Bäsleşik Baýragy",
+    quote: "Floristika — bu janly sungat.",
+    bgAccent: "purple"
+  }
+];
+```
+
+**Kartoçka Dizaýny:**
+- Kartoçka portrait formatda (uzyn)
+- Ýokarda gradient fon + uly emoji + sitat italic görnüşde
+- Aşakda garaňky bölüm: at (Playfair Display), wezipe, tejribe, sertifikat tagi
+- Achievement: Gold badge ýokarda
+- Hover: 3D tilt effekty (CSS perspective + rotateY(5deg) + rotateX(-3deg))
+- "Habarlaş" düwmejigi hover-da peýda bolýar
+
+---
+
+### BÖLÜM 8: SARGYT PROSESI — GÖRKEZME FLOW
+
+**Başlyk:** `Gül Almak Hiç Wagt Bu Çenli Aňsat Bolmandyr`
+
+**4 ädim — horizontal timeline (desktop), vertical (mobile):**
+
+```
+ÄDIM 1                ÄDIM 2              ÄDIM 3              ÄDIM 4
+────                  ────                ────                ────
+📱                    🌸                  🚗                  😍
+Habarlaş              Florist Saýlaýar    Eltip Bermek        Bagtly Pursat
+
+Telefon ýa-da         Hünärmen florist    [SHOP.delivery]     Sargyt eliňize
+saýt arkaly           aýratyn çemeňizi    minut içinde        ýetýär, taze
+sargyt ediň           işleýär             gapyňyza gelýär     we owadan
+```
+
+**Timeline dizaýny:**
+- Noktalary birleşdirýän inçe accent-reňk çyzgy
+- Her ädim görnüşe gireninde aktivleşýär (JS Intersection Observer)
+- Aktiwde: nokat accent reňkde parlýar (glow + pulse)
+- Ädim sanlary uly Oswald şriftde, accent-reňkde
+
+---
+
+### BÖLÜM 9: MÜŞDERI TESWIRLER — EMOSIONAL BÖLÜM
+
+**Başlyk:** `Olaryň Ýylgyryşy Biziň Iň Uly Baýragymyz`
+
+**Teswir Kartoçkalary — Yüzýän Masonry Görnüş:**
+
+3 sütun (desktop), 1 sütun (mobile). Kartoçkalar dürli ululykda.
+
+```javascript
+const testimonials = [
+  {
+    name: "Aýna Çaryýewa",
+    role: "Täze gelni",
+    rating: 5,
+    occasion: "Toý Buketi",
+    emoji: "👰",
+    result: "Ömrümüň iň owadan güni",
+    text: "[SHOP.name]-dan alynan toý buketime seredip ağlamaga başladym. Maýagül hanym meniň arzuwymdan hem owadan bir zat döretdi. Her fotosuratyma seredenimdä ony görýärin.",
+    date: "2 hepde öň"
+  },
+  {
+    name: "Serdar Rejepow",
+    role: "Söýgüli",
+    rating: 5,
+    occasion: "Söýgi Sürprizi",
+    emoji: "💑",
+    result: "Ony geň galdyrdym!",
+    text: "Aýalym [SHOP.delivery] minutda gapysyna gelende ynanamady. Güller şeýle täze we owadandy! \"Bu näme?\" diýip ağlady. [SHOP.name] — söýgüni mümkin edýär.",
+    date: "1 aý öň"
+  },
+  {
+    name: "Läle Atamyradowa",
+    role: "Ofis Dolandyryjysy",
+    rating: 5,
+    occasion: "Hepdelik Abuna",
+    emoji: "🏢",
+    result: "Ofisimiz syrça boldy",
+    text: "Her duşenbe irden täze güller gelýär. Işgärlerimiz we müşderilerimiz ofisimizde hemişe gülläp duran güllere haýranlar. [SHOP.name] bilen hyzmatdaşlygymyz bir ýyldan geçdi.",
+    date: "Hemişelik müşderi"
+  },
+  {
+    name: "Ogulgerek Işanowa",
+    role: "Ejesi",
+    rating: 5,
+    occasion: "Doglan Gün Sowgady",
+    emoji: "🎂",
+    result: "Çagam begençden aglady",
+    text: "18 ýaşly gyzyma sürpriz etdim. [SHOP.name]-dan getiren 18 gülli dürli reňkli buketi görende göz ýaşlary döküp ugrady. Şeýle pursat döredendigi üçin tüýs ýürekden sagboluň.",
+    date: "3 hepde öň"
+  },
+  {
+    name: "Döwlet Hydyrow",
+    role: "Biznes Eýesi",
+    rating: 5,
+    occasion: "Korporatiw Sargyt",
+    emoji: "💼",
+    result: "Iş partnýorlarym haýran galdy",
+    text: "20 sany iş partnýorymyza sowgat gönderendik. [SHOP.name] hemmesini wagtynda we birmeňzeş owadan gaplama bilen iberdi. Indi ähli korporatiw sowgatlarymyz üçin diňe olar.",
+    date: "2 aý öň"
+  },
+  {
+    name: "Bahargül Nurmuhammedowa",
+    role: "Toý Gurnagçysy",
+    rating: 5,
+    occasion: "Toý Zal Bezegi",
+    emoji: "💍",
+    result: "Müşderim çüwdürimde ağlady",
+    text: "Toý gurnagçysy hökmünde köp florist bilen işledim. Ýöne [SHOP.name]-yň hili we wagtynda gelmek ygtybarylygy başgaça. Müşderilerime hemişe maslahat berýärin.",
+    date: "Professional hyzmatdaş"
+  }
+];
+```
+
+**Kartoçka Dizaýny:**
+- Uly oturyş belgi `"` — 100px, accent reňk, fon hökmünde
+- Ýyldyzlar: altyn, parlap duran (CSS glow animasiýasy)
+- Waka tagi (Toý / Söýgi Sürprizi) — accent pill
+- Netije (result): uly, bold, accent reňk — iň göze ilýän bölek
+- At + wezipe + senesi aşakda
+- Hover: Kartoçka çalt ýokaryk galýar, subtle glow
+
+---
+
+### BÖLÜM 10: BAHALAR
+
+**Başlyk:** `Göwnüňizdäki Buket Üçin Dogry Baha`
+
+**3 Bölüm:**
+
+#### Bölüm A — Bukety Sargy Bahasy
+
+```
+Standart Buket    Orta Buket     Lýuks Buket     Özboluşly Sargyt
+55 TMT-dan        120 TMT-dan    250 TMT-dan     Ylalaşyk esasynda
+9-21 gül          25-51 gül      51-101 gül      Doly dizaýn
+```
+
+#### Bölüm B — Toý we Çäre Paketleri
+
+```javascript
+const weddingPackages = [
+  {
+    name: "Bagtly Başlangyç",
+    price: 1200,
+    includes: [
+      "Gelin buketi (35 gül)",
+      "Döşde takylýan çemen (2 sany)",
+      "Stol bezegi (5 stol)",
+      "Toý torty bezegi"
+    ],
+    note: "Kiçi we ýapyk toýlar üçin ideal"
+  },
+  {
+    name: "Arzuw Toýy",
+    price: 3500,
+    popular: true,
+    includes: [
+      "Premium gelin buketi",
+      "Döşde takylýan (10 sany)",
+      "Stol bezegi (15 stol)",
+      "Giriş bezegi",
+      "Toý takhtasy bezegi",
+      "Fotosurat gülleri"
+    ],
+    note: "Iň meşhur toý paketi"
+  },
+  {
+    name: "Şa Toý",
+    price: null,
+    priceNote: "Ylalaşyk",
+    includes: [
+      "Çäksiz konzultasiýa",
+      "Doly zal bezegi",
+      "Özboluşly konsepsiýa",
+      "Gün bütin hyzmat",
+      "Gurnamak we ýygnamak",
+      "Ähli islegleriňiz"
+    ],
+    note: "Iň ýakymly günüňiz üçin"
+  }
+];
+```
+
+#### Bölüm C — Abuna Hyzmaty
+
+```
+Hepdelik          Aýlyk
+280 TMT/hepde     900 TMT/aý   (3 hepde bahasy!)
+1 buket/hepde     4 buket/aý
+
+✅ Awtomatik eltip bermek
+✅ Her gezek täze dizaýn  
+✅ Islän wagtyňyz ýatyrmak
+✅ Mugt gaplama hemişe
+```
+
+---
+
+### BÖLÜM 11: ÝÖRITE PURSATLAR BÖLÜMI
+
+**Başlyk:** `Ýakyn Pursatlaryňyzy Ýatdan Çykarmaň`
+
+**6 pursat — owadan ikonlar bilen:**
+
+```
+14-nji Fewral     8-nji Mart        Nowruz           Doglan Günler
+Söýgüliler Güni   Zenanlar Güni     Bahar Baýramy    Her Gün!
+❤️                🌷                🌸               🎂
+
+Ene Günleri       Okuw ýylı soňy
+Annalar Güni      Gutlag Buketi
+👩                🎓
+```
+
+Her ýaklaşan pursat üçin awtomatik sanaw:
+```javascript
+const events = [
+  { name: "14-nji Fewral", month: 2, day: 14, emoji: "❤️" },
+  { name: "8-nji Mart", month: 3, day: 8, emoji: "🌷" },
+  // ...
+];
+
+// Şu günden iň ýakyn pursata geçen wagty hasapla we görkezme
+```
+
+**Görkezme:** "X gün galdy" sayçak bilen, accent reňkde, pulse animasiýasy bilen.
+
+---
+
+### BÖLÜM 12: HABARLAŞMAK & SARGYT FORMY
+
+**Başlyk:** `Sargydyňyzy Beriň`
+**Sub:** `6 sagadyň içinde floristimiz siz bilen habarlaşar`
+
+**Form meýdanlary:**
+
+```
+HÖKMAN:
+✦ Adyňyz *                    → text
+✦ Telefon belgiňiz *           → tel (+993 prefiksi bilen)
+✦ Habarlaşmak usuly *          → radio: [Telefon] [Telegram] [WhatsApp]
+✦ Haýsy mümkinçilik? *         → select dropdown:
+                                  Söýgi Buketi / Doglan Gün / Toý / 
+                                  Korporatiw / Sowgat / Başga
+
+ISLEGLER (Hökman däl):
+✦ Kim üçin?                    → text (Ýakyn adamyňyzyň ady...)  
+✦ Sanlar ýa-da ululyk         → select: Kiçi / Orta / Uly / Lýuks
+✦ Reňk islegleriňiz           → Visual reňk palleti (7 reňk gutujy)
+                                  🔴 Gyzyl  🩷 Gülgüne  ⚪ Ak  
+                                  💛 Sary   🟣 Benewşe  🩵 Mawy  🌿 Ýaşyl
+✦ Eltip bermek wagty          → datetime-local input (min: şu günüň +2 sagady)
+✦ Eltip bermek salgysy        → textarea (1 setir)
+✦ Özboluşly islek ýa-da habar → textarea (3 setir)
+✦ Bujetim (takmynan)          → range slider: 50 → 2000 TMT
+                                  Görkezýär: "[X] TMT" (real-time JS)
+```
+
+**Bujet Slider Görkezme:**
+```javascript
+const slider = document.getElementById('budget');
+const display = document.getElementById('budget-display');
+slider.addEventListener('input', () => {
+  display.textContent = parseInt(slider.value).toLocaleString() + ' TMT';
+});
+// Aşakda: "Bu baha üçin takmynan: [2-3 gülli buket]" kömek tekst
+```
+
+**Iberme düwmesi:**
+```
+[🌸 Sargydy Iber →]
+```
+Full-width mobile. Accent gradient background. Hover-da glow pulse.
+
+**Üstünlikli iberme animasiýasy:**
+- Formanyň ähli meýdanlary fades out
+- Merkezde uly ✅ çykýar (SVG stroke animasiýasy)
+- Aşakdan çykýar:
+```
+✨ SARGYDYŇYZ KABUL EDILDI! ✨
+
+Salam, [name]! 🌸
+
+[SHOP.delivery] minutda floristimiz
+[phone] belgiňize jaň eder.
+
+Sargytyňyz: [occasion]
+Habarlaşmak: [contactMethod]
+
+[SHOP.name] sizi begendirmäge howlukýar! 🌹
+```
+
+---
+
+### BÖLÜM 13: FOOTER
+
+```
+[Çep blok]                    [Merkez — linkler]         [Sag — sosial]
+[SHOP.name]                   Koleksiýalar               📱 [SHOP.phone]
+[SHOP.tagline]                Floristler                 📍 [SHOP.address]
+                              Bahalar                    🏙️ [SHOP.city]
+                              Abuna                      ──────────────
+                              Habarlaş                   [Instagram] [Telegram]
+                                                         [WhatsApp] [TikTok]
+
+─────────────────────────────────────────────────────────────────
+© [ýyl] [SHOP.name] · Ähli hukuklar goragly
+Bu saýt 🛠️ Ýeňil Web Agentligi tarapyndan döredildi · yenil.ru
+```
+
+---
+
+## 🎭 ANIMASIÝA DOLY SANAWY
+
+### Sahypa Açylyş Yzygiderliligi (GSAP):
+```javascript
+gsap.registerPlugin(ScrollTrigger);
+
+const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+tl
+  .from('.nav',            { y: -100, opacity: 0, duration: 0.7 })
+  .from('.hero-badge',     { x: -50, opacity: 0, duration: 0.5 }, '-=0.4')
+  .from('.hero-line-1',    { y: 120, opacity: 0, duration: 0.8 }, '-=0.3')
+  .from('.hero-line-2',    { y: 120, opacity: 0, duration: 0.8 }, '-=0.5')
+  .from('.hero-line-3',    { y: 120, opacity: 0, duration: 0.8 }, '-=0.5')
+  .from('.hero-tagline',   { opacity: 0, duration: 0.6 }, '-=0.4')
+  .from('.hero-body',      { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
+  .from('.hero-buttons',   { y: 30, opacity: 0, duration: 0.5, stagger: 0.15 }, '-=0.2')
+  .from('.floating-card',  { x: 80, opacity: 0, duration: 0.7, stagger: 0.2, ease: 'back.out(1.7)' }, '-=0.3')
+  .from('.trust-strip',    { opacity: 0, duration: 0.5 }, '-=0.2');
+```
+
+### Scroll Animasiýalary:
+```javascript
+// Ähli .reveal klasly elementler:
+gsap.utils.toArray('.reveal').forEach(el => {
+  gsap.fromTo(el,
+    { y: 60, opacity: 0 },
+    {
+      y: 0, opacity: 1, duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        once: true
+      }
+    }
+  );
+});
+
+// Kartoçkalar üçin stagger:
+gsap.utils.toArray('.card-group').forEach(group => {
+  gsap.from(group.querySelectorAll('.card'), {
+    y: 80, opacity: 0, stagger: 0.1, duration: 0.7,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: group, start: 'top 80%', once: true }
+  });
+});
+```
+
+### CSS-Only Dowamly Animasiýalar:
+```css
+/* Gülleriň ýüzmegi */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-15px) rotate(2deg); }
+  66%       { transform: translateY(-8px) rotate(-1deg); }
+}
+
+/* Petal aýlanmagy */
+@keyframes slowRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* CTA parlama */
+@keyframes accentGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1); }
+  50%       { box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.6), 0 0 100px rgba(var(--accent-rgb), 0.2); }
+}
+
+/* Ýyldyz ýalpyldamasy */
+@keyframes starPulse {
+  0%, 100% { filter: drop-shadow(0 0 4px gold); }
+  50%       { filter: drop-shadow(0 0 12px gold) drop-shadow(0 0 20px gold); }
+}
+
+/* Ösüş barometer (stat barlar) */
+@keyframes growWidth {
+  from { width: 0%; }
+  to   { width: var(--target-width); }
+}
+```
+
+---
+
+## 📱 MOBIL HÖKMAN TALAPLARY
+
+```css
+/* Responsiv tipografiýa */
+.hero-name    { font-size: clamp(3rem, 14vw, 9rem); }
+.section-h2   { font-size: clamp(1.8rem, 7vw, 3.5rem); }
+.body         { font-size: clamp(0.875rem, 4vw, 1.125rem); }
+.price        { font-size: clamp(1.2rem, 5vw, 2rem); }
+
+body { overflow-x: hidden; }
+* { box-sizing: border-box; }
+
+/* Minimum galtaşma meýdany */
+button, a, .card { min-height: 44px; }
+
+/* Mobil padding */
+.section { padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 2rem); }
+```
+
+**Mobil-spesifik üýtgeşmeler:**
+- Hero: Gara bloklara ýygnaly, ýüzýän kartlar aşakda horizontal scroll
+- Koleksiýalar: 2 sütun grid
+- Önümler: 2 sütun grid
+- Floristler: Horizontal snap scroll
+- Bahalar: Tekli sütun
+- Footer: Doly tekli sütun
+
+---
+
+## 💡 DEMO URL MYSALLARY (Salam müşderilere ibermek üçin)
+
+```
+# Default görkezme:
+https://yenil.ru/flowers
+
+# Gül Dünýäsi — gyzyl tema:
+https://yenil.ru/flowers?name=Gül+Dünýäsi&city=Aşgabat&color=E91E8C&color2=FF6B9D&phone=%2B99312345678&orders=5000%2B&est=2018
+
+# Bahar Flowers — açyk gülgüne:
+https://yenil.ru/flowers?name=Bahar+Flowers&city=Mary&color=FF69B4&color2=FFB6C1&phone=%2B99325112233&orders=2000%2B&est=2020&delivery=45
+
+# Lala Güllük — mor/benewşe tema:
+https://yenil.ru/flowers?name=Lala+Güllük&city=Türkmenabat&color=9C27B0&color2=CE93D8&delivery=50&orders=1500%2B
+
+# Premium Flora — altyn tema:
+https://yenil.ru/flowers?name=Premium+Flora&city=Aşgabat&color=C9A84C&color2=E8C96B&tag=Lýuks.+Inçe.+Owadan.&orders=8000%2B&est=2015
+
+# Ak Gül — minimalist ak tema:
+https://yenil.ru/flowers?name=Ak+Gül&city=Balkanabat&color=F8BBD9&color2=FCE4EC&delivery=55&theme=light
+```
+
+---
+
+## ✅ HIL BARLAG SANAWY
+
+### Funksiýa:
+- [ ] Ähli SHOP.* üýtgeýjiler sahypanyň her ýerinde dogry görünýär
+- [ ] Hiç hili hardcoded dükana degişli maglumat ýok
+- [ ] URL param bolmasa ajaýyp default görünüş işleýär
+- [ ] Filter tablar (koleksiýalar) animasiýa bilen işleýär
+- [ ] Bujet slider real-time baha görkezýär
+- [ ] Form ibermek üstünlikli ýagdaý görkezýär
+- [ ] Stat sanlary scrollda count-up edýär
+- [ ] Pursat sanawy dogry hasaplaýar
+
+### Dizaýn:
+- [ ] 375px we 390px ekranda hiç hili gorizontal syrylma ýok
+- [ ] Ähli animasiýalar 60fps işleýär
+- [ ] Şrift ýüklenmezden öň birmeňzeş fallback font bar
+- [ ] Kontrast gatnaşygy minimum 4.5:1 saklanýar
+- [ ] Hover effektleri mobilde işlemeýär (touch cihaz)
+- [ ] Sahypanyň aşagynda Ýeňil kredit baglanyşygy bar
+
+### Netijelilik:
+- [ ] GSAP diňe animasiýa üçin ulanylýar, layout üçin däl
+- [ ] will-change: transform ähli animirleýän elementlerde bar
+- [ ] Ekrana girmeýän animasiýalar işlemeýär (visibility check)
+- [ ] CSS gradient-ler surat hökmünde işleýär
+
+---
+
+## 🚀 REPLIT AGENTINE SON SÖZ
+
+Sen şu anda **Türkmenistanyň iň oňat gül dükany saýtyny** gurýarsyň.
+
+Bu sahypa açylanda ziyaretçi şuny duýmaly:  
+*"Bu meniň dükanym üçin ýasalan. Şunuň ýaly saýtym bolmagy hökman."*
+
+**Ölçeg ýeke-täk:** Bir gül dükanynyň eýesi bu sahypany görende  
+gözlerinden gözýaş akyp başlamalymy?  
+Jogap — HAWA bolmaly.
+
+Gurluşy planlaşdyr → Bölüm-bölüm gur → Animasiýa goş → Jikme-jik sazla.  
+Üstünden geç, ýalňyşlary düzelt, gutardan soň ýene bir gezek barla.
+
+**Çykyş:** Bir `index.html` faýly. Başga zat ýok.  
+**Standart:** Portfolio derejesi. Dükan eýesi göreninde begener.
+
+Gur ony. 🌸
