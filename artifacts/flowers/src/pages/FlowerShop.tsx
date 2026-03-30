@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Heart, Gem, Gift, Building2, Bird, Leaf, Package, Calendar,
+  Heart, Gem, Gift, Building2, Bird, Leaf, Calendar,
   Phone, MapPin, Clock, Instagram, Send, MessageCircle,
   Star, ChevronRight, Truck, Scissors, Sparkles, Ribbon,
   ShoppingBag, Menu, X, ArrowRight, Award, CheckCircle,
   Flower, Flower2, Camera, Briefcase
 } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function hexToRgb(hex: string): string {
   const h = hex.replace("#", "");
@@ -109,7 +113,6 @@ export default function FlowerShop() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const statsRef = useRef<HTMLDivElement>(null);
-  const gsapLoaded = useRef(false);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--accent", accent);
@@ -126,48 +129,104 @@ export default function FlowerShop() {
     const onScroll = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
 
-    if (!gsapLoaded.current) {
-      gsapLoaded.current = true;
-      const gsapScript = document.createElement("script");
-      gsapScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js";
-      gsapScript.onload = () => {
-        const stScript = document.createElement("script");
-        stScript.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js";
-        stScript.onload = () => {
-          const g = (window as any).gsap;
-          const ST = (window as any).ScrollTrigger;
-          g.registerPlugin(ST);
-          const tl = g.timeline({ defaults: { ease: "power3.out" } });
-          tl
-            .from(".nav", { y: -100, opacity: 0, duration: 0.7 })
-            .from(".hero-badge", { x: -50, opacity: 0, duration: 0.5 }, "-=0.4")
-            .from(".hero-line-1", { y: 120, opacity: 0, duration: 0.8 }, "-=0.3")
-            .from(".hero-line-2", { y: 120, opacity: 0, duration: 0.8 }, "-=0.5")
-            .from(".hero-line-3", { y: 120, opacity: 0, duration: 0.8 }, "-=0.5")
-            .from(".hero-tagline", { opacity: 0, duration: 0.6 }, "-=0.4")
-            .from(".hero-body", { y: 30, opacity: 0, duration: 0.5 }, "-=0.3")
-            .from(".hero-buttons .hbtn", { y: 30, opacity: 0, duration: 0.5, stagger: 0.15 }, "-=0.2")
-            .from(".floating-card", { x: 80, opacity: 0, duration: 0.7, stagger: 0.2, ease: "back.out(1.7)" }, "-=0.3")
-            .from(".trust-strip", { opacity: 0, duration: 0.5 }, "-=0.2");
+    // ── HERO entry animation with bundled GSAP (no CDN) ──
+    gsap.set(".hero-badge", { x: -40, opacity: 0 });
+    gsap.set(".hero-line-1, .hero-line-2, .hero-line-3", { y: 80, opacity: 0 });
+    gsap.set(".hero-tagline", { opacity: 0 });
+    gsap.set(".hero-body", { y: 20, opacity: 0 });
+    gsap.set(".hero-buttons .hbtn", { y: 20, opacity: 0 });
+    gsap.set(".floating-card", { x: 60, opacity: 0 });
+    gsap.set(".trust-strip", { opacity: 0 });
+    gsap.set(".nav", { y: -80, opacity: 0 });
 
-          g.utils.toArray(".reveal").forEach((el: Element) => {
-            g.fromTo(el, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%", once: true } });
-          });
-          g.utils.toArray(".card-group").forEach((group: Element) => {
-            g.from(group.querySelectorAll(".card-anim"), { y: 80, opacity: 0, stagger: 0.07, duration: 0.7, ease: "power3.out", scrollTrigger: { trigger: group, start: "top 80%", once: true } });
-          });
-        };
-        document.head.appendChild(stScript);
-      };
-      document.head.appendChild(gsapScript);
-    }
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl
+      .to(".nav",            { y: 0, opacity: 1, duration: 0.6 })
+      .to(".hero-badge",     { x: 0, opacity: 1, duration: 0.5 }, "-=0.3")
+      .to(".hero-line-1",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.2")
+      .to(".hero-line-2",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.45")
+      .to(".hero-line-3",    { y: 0, opacity: 1, duration: 0.7 }, "-=0.45")
+      .to(".hero-tagline",   { opacity: 1, duration: 0.5 }, "-=0.3")
+      .to(".hero-body",      { y: 0, opacity: 1, duration: 0.5 }, "-=0.3")
+      .to(".hero-buttons .hbtn", { y: 0, opacity: 1, duration: 0.5, stagger: 0.12 }, "-=0.2")
+      .to(".floating-card",  { x: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: "back.out(1.7)" }, "-=0.3")
+      .to(".trust-strip",    { opacity: 1, duration: 0.5 }, "-=0.2");
 
+    // ── Scroll reveals via IntersectionObserver (reliable, no CDN) ──
+    const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
+    revealEls.forEach(el => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(48px)";
+      el.style.transition = "opacity 0.75s cubic-bezier(.4,0,.2,1), transform 0.75s cubic-bezier(.4,0,.2,1)";
+    });
+
+    const cardGroups = document.querySelectorAll<HTMLElement>(".card-group");
+    cardGroups.forEach(group => {
+      const cards = group.querySelectorAll<HTMLElement>(".card-anim");
+      cards.forEach(c => {
+        c.style.opacity = "0";
+        c.style.transform = "translateY(55px)";
+        c.style.transition = "opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.4,0,.2,1)";
+      });
+    });
+
+    const ioReveal = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+          ioReveal.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+    revealEls.forEach(el => ioReveal.observe(el));
+
+    const ioCards = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const group = entry.target as HTMLElement;
+          const cards = group.querySelectorAll<HTMLElement>(".card-anim");
+          cards.forEach((c, i) => {
+            setTimeout(() => {
+              c.style.opacity = "1";
+              c.style.transform = "translateY(0)";
+            }, i * 65);
+          });
+          ioCards.unobserve(group);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
+
+    cardGroups.forEach(g => ioCards.observe(g));
+
+    // Safety fallback: ensure everything is visible after 4s regardless
+    const fallback = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(".reveal, .card-anim").forEach(el => {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+      document.querySelectorAll<HTMLElement>(".nav,.hero-badge,.hero-line-1,.hero-line-2,.hero-line-3,.hero-tagline,.hero-body,.trust-strip,.floating-card").forEach(el => {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+    }, 4000);
+
+    // Stats counter
     const obs = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) setStatsVisible(true);
     }, { threshold: 0.3 });
     if (statsRef.current) obs.observe(statsRef.current);
 
-    return () => { window.removeEventListener("scroll", onScroll); obs.disconnect(); };
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      obs.disconnect();
+      ioReveal.disconnect();
+      ioCards.disconnect();
+      clearTimeout(fallback);
+      tl.kill();
+    };
   }, []);
 
   const filteredProducts = activeFilter === "all" ? products : products.filter(p => p.category === activeFilter);
@@ -311,8 +370,7 @@ export default function FlowerShop() {
         .why-stats-inline { color:var(--text-muted); font-size:.92rem; }
         .why-stats-inline strong { color:var(--gold); }
         .feature-list { display:flex; flex-direction:column; gap:1.6rem; }
-        .feature-item { display:flex; gap:1rem; align-items:flex-start; animation:slideUp .6s ease forwards; opacity:0; }
-        .feature-item:nth-child(1){animation-delay:.1s} .feature-item:nth-child(2){animation-delay:.25s} .feature-item:nth-child(3){animation-delay:.4s} .feature-item:nth-child(4){animation-delay:.55s}
+        .feature-item { display:flex; gap:1rem; align-items:flex-start; }
         .feature-icon-box { width:44px; height:44px; border-radius:12px; background:rgba(${accentRgb},.1); border:1px solid rgba(${accentRgb},.2); display:flex; align-items:center; justify-content:center; color:var(--accent); flex-shrink:0; }
         .feature-title { font-weight:600; font-size:.95rem; margin-bottom:.3rem; }
         .feature-desc { color:var(--text-muted); font-size:.84rem; line-height:1.55; }
@@ -695,14 +753,14 @@ export default function FlowerShop() {
             <div className="gold-divider" />
             <p className="why-stats-inline"><strong>{SHOP.orders}</strong> sargyt · <strong>{SHOP.rating}★</strong> baha</p>
           </div>
-          <div className="feature-list">
+          <div className="feature-list card-group">
             {[
               { Icon: Leaf, title: "Täze Güller, Her Gün", desc: `Floristlerimiz her irden bazara gidip iň täze gülleri saýlaýar.` },
               { Icon: Scissors, title: "Hünärmen Floristler", desc: `5+ ýyllyk tejribeli dizaýnerlerimiz her çemeni eser hökmünde işleýär.` },
               { Icon: Truck, title: `${SHOP.delivery} Min Eltip Bermek`, desc: `${SHOP.city} içinde. Sowadyjyly ulag bilen gül täze ýetýär.` },
               { Icon: Ribbon, title: "Mugt Premium Gaplama", desc: `Her sargyt bilen mugt ribbon, sowgat haty we owadan gaplama.` },
             ].map((f, i) => (
-              <div key={i} className="feature-item">
+              <div key={i} className="feature-item card-anim">
                 <div className="feature-icon-box"><f.Icon size={20} /></div>
                 <div>
                   <div className="feature-title">{f.title}</div>
