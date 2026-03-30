@@ -150,7 +150,7 @@ export default function FlowerShop() {
   const params = new URLSearchParams(window.location.search);
   const SHOP = {
     name: params.get("name") || "Gül Dünýäsi",
-    tagline: params.get("tag") || "Har bir his, har bir lahza — gulda abadiy.",
+    tagline: params.get("tag") || "Güller diňe çemen däl — bu duýgy, bu söýgi, bu pursatdyr.",
     city: params.get("city") || "Aşgabat",
     phone: params.get("phone") || "+993 12 34-56-78",
     address: params.get("addr") || "Bitarap Türkmenistan şaýoly 22",
@@ -275,9 +275,13 @@ export default function FlowerShop() {
         el.style.opacity = "1";
         el.style.transform = "none";
       });
-      document.querySelectorAll<HTMLElement>(".nav,.hero-badge,.hero-line-1,.hero-line-2,.hero-line-3,.hero-tagline,.hero-body,.trust-strip,.floating-card").forEach(el => {
+      document.querySelectorAll<HTMLElement>(".nav,.hero-badge,.hero-line-1,.hero-line-2,.hero-line-3,.hero-tagline,.hero-body,.trust-strip,.floating-card,.hero-img-wrap").forEach(el => {
         el.style.opacity = "1";
         el.style.transform = "none";
+        el.style.filter = "none";
+      });
+      document.querySelectorAll<HTMLElement>(".hero-curtain").forEach(el => {
+        el.style.transform = "scaleY(0)";
       });
     }, 4000);
 
@@ -574,6 +578,7 @@ export default function FlowerShop() {
         .mobile-menu.open .mm-cta { animation: menuItemIn .4s cubic-bezier(.22,1,.36,1) .38s both; }
 
         /* ── HERO ── */
+        .hero-curtain { position:fixed; inset:0; z-index:999; background:var(--bg); pointer-events:none; transform-origin:top center; }
         .hero { min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:8rem 2rem 5rem; }
         .hero-orb { position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; }
         .hero-orb-1 { width:700px; height:700px; background:var(--accent); opacity:.07; top:50%; left:50%; transform:translate(-50%,-50%); animation:slowRotate 35s linear infinite; }
@@ -966,6 +971,7 @@ export default function FlowerShop() {
 
       {/* HERO */}
       <section className="hero">
+        <div className="hero-curtain" />
         <div className="hero-orb hero-orb-1" />
         <div className="hero-orb hero-orb-2" />
         <div className="hero-orb hero-orb-3" />
@@ -974,13 +980,13 @@ export default function FlowerShop() {
           <div>
             <div className="hero-badge"><Sparkles size={13} /> {SHOP.city} — {SHOP.rating} ★ · {SHOP.reviews} Syn</div>
             <h1 className="hero-heading">
-              <span className="hero-line-1">Duýgularyňy</span>
-              <span className="hero-line-2">Güller</span>
-              <span className="hero-line-3">Bilen Aýt</span>
+              <span className="hero-line-1">Güller diňe</span>
+              <span className="hero-line-2">çemen däl —</span>
+              <span className="hero-line-3">bu duýgudyr.</span>
             </h1>
             <div className="hero-tagline">✦ {SHOP.tagline} ✦</div>
             <p className="hero-body">
-              {SHOP.city} şäheriniň iň owadan gülleri. {SHOP.orders} bagtly müşderi, {SHOP.delivery} minutda eltip bermek, hünärmen gülçi topary bilen arzuwlaryňyzy hakykata öwürýäris.
+              Her bir pursat, her bir söýgi — gülleriň dili bilen aýdylýar. {SHOP.city} şäherinde {SHOP.orders} bagtly müşderi, {SHOP.delivery} minutda eltip bermek. Arzuwlaryňyzy hakykata öwürýäris.
             </p>
             <div className="hero-buttons">
               <a href="#contact" className="btn-accent hbtn"><ShoppingBag size={16} /> Sargyt Beriň</a>
