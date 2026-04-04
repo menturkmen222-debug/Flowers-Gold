@@ -91,6 +91,17 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/flowers` (`@workspace/flowers`)
+
+White-label flower shop demo. Single-file React component (`FlowerShop.tsx`) with:
+
+- **Bilingual support**: Russian (default on first load) + Turkmen, toggled via flag icon buttons (🇷🇺 / 🇹🇲) in the nav and footer
+- **Translation architecture**: `T` object with `tm` / `ru` sub-objects covering all UI strings; data arrays (`collectionsData`, `productsData`, `floristsData`, `testimonialsData`, `eventsData`) use `col[lang]` pattern
+- **Language switcher**: `FlagRU` and `FlagTM` inline SVG components; active state highlighted with accent gradient
+- **URL-parameter driven config**: `name`, `city`, `phone`, `color`, `color2`, `ig`, `tg`, `wa`, `est`, `orders`, `rating`, `reviews`, `delivery`
+- All animations: GSAP hero curtain reveal + IntersectionObserver scroll reveals
+- No external CSS files — all styles in inline `<style>` block
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
